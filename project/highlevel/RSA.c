@@ -3,23 +3,26 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+#define MASK    (1L << 63)      // Mask to get the MSBit
+
+/**
+ * Calculates the modular multiplication using the blakley method
+ * 
+ * Calculates A * B mod n
+ */
 uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
 {
     uint64_t M = 0;                     // Partial
 
-    uint64_t k = sizeof(A) * 8;         // A is k-bit long, do algo as long as there is bits left
-
-    uint64_t mask = (1L << (k - 1));    // Mask to get the i-th bit
+    uint8_t k = sizeof(A) * 8;         // A is k-bit long, do algo as long as there is bits left
 
     while (k--) {
-        M = (M << 1) + (A * (B & mask ? 1 : 0)); 
+        M = (M << 1) + (B & MASK ? A : 0);
         
         // This is for HW implement, equivalent to above
-        //M = (M << 1) + (B & mask ? A : 0);        
+        //M = (M << 1) + (A * (B & MASK ? 1 : 0));
         
-        // The two following lines are equivalent
-        //B <<= 1;          
-        mask >>= 1;
+        B <<= 1;
 
         while (M >= n)
             M -= n;
@@ -29,22 +32,29 @@ uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
 }
 
 
-uint64_t RSA(uint64_t d, uint64_t e, uint64_t n) 
+/**
+ * Calculates the RSA using $data^{exponent} mod n$
+ */
+uint64_t RSA(
+    uint64_t data, 
+    uint64_t exponent,      
+    uint64_t n                          // The modulo value
+    ) 
 {
-    uint64_t    c = 1, 
-                p = d;
+    uint64_t    chipher = 1,            // Chipher
+                partial = data;         // Partial
 
-    while (e)
+    while (exponent)
     {
-        if (e & 1)
-            c = ModMulti(c, p, n);
+        if (exponent & 1)
+            chipher = ModMulti(chipher, partial, n);
         
-        p = ModMulti(p, p, n);
+        partial = ModMulti(partial, partial, n);
 
-        e >>= 1;
+        exponent >>= 1;
     }
 
-    return c;
+    return chipher;
 }
 
 
