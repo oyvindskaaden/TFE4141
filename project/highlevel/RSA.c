@@ -26,6 +26,14 @@ uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
 
         while (M >= n)
             M -= n;
+
+        // We know here that M <= 3n - 3
+        if (M >= 2 * n)
+            M -= 2 * n;
+        
+        if (M >= n)
+            M -= n;
+
     }
 
     return M;
