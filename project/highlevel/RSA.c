@@ -19,17 +19,14 @@ uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
     while (k--) {
         M = (M << 1) + (B & MASK ? A : 0);
         
-        // This is for HW implement, equivalent to above
-        //M = (M << 1) + (A * (B & MASK ? 1 : 0));
+        // This is probably easier to read, equivalent to above
+        // M = (M << 1) + (A * (B & MASK ? 1 : 0));
         
         B <<= 1;
 
-        while (M >= n)
-            M -= n;
-
         // We know here that M <= 3n - 3
-        if (M >= 2 * n)
-            M -= 2 * n;
+        if (M >= n << 1)
+            M -= n << 1;
         
         if (M >= n)
             M -= n;
