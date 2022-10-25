@@ -13,15 +13,13 @@
 uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
 {
     uint64_t M = 0;                     // Partial
-
-    uint8_t k = sizeof(A) * 8;         // A is k-bit long, do algo as long as there is bits left
+    uint8_t k = sizeof(A) * 8;          // A is k-bit long, do algo as long as there is bits left
 
     while (k--) {
-        M = (M << 1) + (B & MASK ? A : 0);
-        
+        M = (M << 1) + (B & MASK ? A : 0);        
         // This is probably easier to read, equivalent to above
         // M = (M << 1) + (A * (B & MASK ? 1 : 0));
-        
+
         B <<= 1;
 
         // We know here that M <= 3n - 3
@@ -30,7 +28,6 @@ uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
         
         if (M >= n)
             M -= n;
-
     }
 
     return M;
@@ -55,10 +52,8 @@ uint64_t RSA(
             chipher = ModMulti(chipher, partial, n);
         
         partial = ModMulti(partial, partial, n);
-
         exponent >>= 1;
     }
-
     return chipher;
 }
 
