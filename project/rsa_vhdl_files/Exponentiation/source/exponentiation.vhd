@@ -36,4 +36,25 @@ begin
 	result <= message xor modulus;
 	ready_in <= ready_out;
 	valid_out <= valid_in;
+
+	multi_mod_control: entity work.multi_mod_control
+		port map (
+
+		)
+
+
+	multi_mod_datapath: entity work.multi_mod_datapath
+		port map (
+			A_in => message;
+			B_in => message;
+
+			n_in => key;
+
+			M_out => result;
+
+			clk => clk;
+			reset_n => reset_n;
+		);
+
+
 end expBehave;
