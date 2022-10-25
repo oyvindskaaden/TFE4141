@@ -12,22 +12,31 @@
  */
 uint64_t ModMulti (uint64_t A, uint64_t B, uint64_t n)
 {
-    uint64_t M = 0;                     // Partial
-    uint8_t k = sizeof(A) * 8;          // A is k-bit long, do algo as long as there is bits left
+    uint64_t    M               = 0;            // M variable
+    int64_t     partial         = 0,            // First partial, after M + A
+                partial_mod_1n  = 0,            // One of the two second partials, Partial - 1*n
+                partial_mod_2n  = 0;            // The second of the two partials, Partial - 2*n
+    
+    uint8_t k = sizeof(A) * 8;                  // A is k-bit long, do algo as long as there is bits left
 
     while (k--) {
-        M = (M << 1) + (B & MASK ? A : 0);        
+        partial = (M << 1) + (B & MASK ? A : 0);        
         // This is probably easier to read, equivalent to above
         // M = (M << 1) + (A * (B & MASK ? 1 : 0));
 
         B <<= 1;
 
         // We know here that M <= 3n - 3
-        if (M >= n << 1)
-            M -= n << 1;
+        partial_mod_1n = partial - n;
+        partial_mod_2n = partial - (n << 1);
+
+        M = partial;
         
-        if (M >= n)
-            M -= n;
+        if (partial_mod_1n >= 0)
+            M = partial_mod_1n;
+        
+        if (partial_mod_2n >= 0)
+            M = partial_mod_2n;
     }
 
     return M;
