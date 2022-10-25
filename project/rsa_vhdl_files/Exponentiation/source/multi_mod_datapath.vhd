@@ -32,12 +32,130 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity multi_mod_datapath is
---  Port ( );
+	generic (
+		C_block_size : integer := 256
+	);
+    Port (
+        A_in        : in std_logic_vector(C_block_size-1 downto 0);
+        B_in        : in std_logic_vector(C_block_size-1 downto 0);
+        N_in        : in std_logic_vector(C_block_size-1 downto 0);
+
+        A_reg_load  : in std_logic;
+        B_reg_load  : in std_logic;
+        M_reg_load  : in std_logic;
+        N_reg_load  : in std_logic;
+
+        B_reg_sel   : in std_logic;
+
+        mod_sel     : in std_logic_vector(1 downto 0);
+
+        borrow_n    : out std_logic;
+        borrow_2n   : out std_logic;
+
+
+        M_out       : out std_logic_vector(C_block_size-1 downto 0);
+
+        reset_n     : in std_logic;
+        clk         : in std_logic;
+
+     );
+
 end multi_mod_datapath;
 
 architecture Behavioral of multi_mod_datapath is
+    signal A_r, A_mux : std_logic_vector(C_block_size-1 downto 0);
+    signal B_r : std_logic_vector(C_block_size-1 downto 0);
+    signal N_r : std_logic_vector(C_block_size-1 downto 0);
+    signal M_r : std_logic_vector(C_block_size-1 downto 0);
 
+    signal a_reg_sel : std_logic;
+
+    signal A_mux            : std_logic_vector(C_block_size-1 downto 0);
+    signal partial_sum      : std_logic_vector(C_block_size-1 downto 0);
+    signal partial_mod_1n   : std_logic_vector(C_block_size-1 downto 0);
+    signal partial_mod_2n   : std_logic_vector(C_block_size-1 downto 0);
 begin
+    --A Register
+    process(clk, reset_n, A_in) begin
+        if(reset_n = '0') begin
+            A_r <= (others => '0');
+        elsif(clk'event and clk='1') then
+            if(A_reg_load='1') then
+                A_r <= A_in;
+            end if;
+        end if;
+    end process;
+
+    --B Register
+    process(clk, reset_n, B_in) begin
+        if(reset_n = '0') begin
+            A_r <= (others => '0');
+        elsif(clk'event and clk='1' and B_reg_load='1') then
+            if(B_reg_sel='0') then
+                B_r <= B_in;
+            elsif(B_reg_sel='1') then
+                B_r <= B_r(254 downto 0) & '0';
+            end if;
+        end if;
+    end process;
+
+    --N Register
+    process(clk, reset_n, N_in) begin
+        if(reset_n = '0') begin
+            N_r <= (others => '0');
+        elsif(clk'event and clk='1') then
+            if(N_reg_load='1') then
+                N_r <= N_in;
+            end if;
+        end if;
+    end process;
+    
+    --M Register
+    process(clk, reset_n) begin
+        if(reset_n = '0') begin
+            M_r <= (others => '0');
+        elsif(clk'event and clk='1') then
+            if(M_reg_load='1') then
+                M_r <= M_out;
+            end if;
+        end if;
+
+
+    end process;
+
+
+    --Adders etc
+    process(M_r, A_r, B_r(255),N_r, mod_sel) begin
+        if(B_r(255)) begin
+            A_mux <= A_r;
+        else
+            A_mux <= (others =>'0'); 
+        end if;
+        
+        partial_sum <= (M_r(254 downto 0) & '0') + A_mux;
+
+
+        case mod_sel is
+            when b"00" =>
+                M_out <= partial_sum;
+            when b"01" =>
+                M_out <= partial_mod_1n;
+            when b"10" =>
+                M_out <= partial_mod_2n;
+            when b"11" =>
+                M_out <= (others <= '0');
+        end case;
+
+        --TODO: Fikse borrow
+        partial_mod_1n <= partial_sum - N_r;
+        partial_mod_2n <= partial_sum - (N_r(254 downto 0) & '0');
+
+
+
+    end process;
+
+
+
 
 
 end Behavioral;
