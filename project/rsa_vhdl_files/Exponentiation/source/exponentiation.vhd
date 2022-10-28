@@ -37,37 +37,66 @@ entity exponentiation is
 	);
 	port (
 		--input controll
-		valid_in	: in STD_LOGIC;
-		ready_in	: out STD_LOGIC;
-
+		valid_in	: in    STD_LOGIC;
+		ready_in	: out   STD_LOGIC;
+                            
 		--input data
-		message 	: in STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
-		key 		: in STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
+		message 	: in    STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
+		key 		: in    STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
 
 		--ouput controll
-		ready_out	: in STD_LOGIC;
-		valid_out	: out STD_LOGIC;
+		ready_out	: in    STD_LOGIC;
+		valid_out	: out   STD_LOGIC;
 
 		--output data
-		result 		: out STD_LOGIC_VECTOR(C_block_size-1 downto 0);
+		result 		: out   STD_LOGIC_VECTOR(C_block_size-1 downto 0);
 
 		--modulus
-		modulus 	: in STD_LOGIC_VECTOR(C_block_size-1 downto 0);
+		modulus 	: in    STD_LOGIC_VECTOR(C_block_size-1 downto 0);
 
 		--utility
-		clk 		: in STD_LOGIC;
-		reset_n 	: in STD_LOGIC
+		clk 		: in    STD_LOGIC;
+		reset_n 	: in    STD_LOGIC
 	);
 end exponentiation;
 
 
 architecture expBehave of exponentiation is
 begin
-	result <= message xor modulus;
-	ready_in <= ready_out;
-	valid_out <= valid_in;
+	--result <= message xor modulus;
+	--ready_in <= ready_out;
+	--valid_out <= valid_in;
 
-	
+	u_exponentiation_control: entity work.exponentiation_control
+	   port map (
+	        -- Clock and Reset
+            clk         => clk,
+            reset_n     => reset_n,
+            
+            --input controll
+            valid_in    => valid_in,
+            ready_in    => ready_in,
+            
+            --ouput controll
+            ready_out   => ready_out,
+            valid_out   => valid_out
+	   );
+	   
+	u_exponentiation_datapath: entity work.exponentiation_datapath
+        port map (
+            clk         => clk,
+            reset_n     => reset_n,
+            
+            --input data
+            message 	=> message,
+            key 		=> key,
+            
+            --modulus
+            modulus 	=> modulus,
+            
+            --output data
+            result 		=> result
+	   );
 
 
 end expBehave;
