@@ -39,7 +39,7 @@ entity multi_mod_control is
         A_reg_load  : out std_logic;
         B_reg_load  : out std_logic;
         M_reg_load  : out std_logic;
-        n_reg_load  : out std_logic;
+        N_reg_load  : out std_logic;
 
         B_reg_sel   : out std_logic;
 
@@ -51,7 +51,7 @@ entity multi_mod_control is
 
         -- Reset and Clock
         reset_n     : in std_logic;
-        clk         : in std_logic;
+        clk         : in std_logic
     );
 end multi_mod_control;
 

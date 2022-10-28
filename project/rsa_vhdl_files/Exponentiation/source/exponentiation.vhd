@@ -67,24 +67,7 @@ begin
 	ready_in <= ready_out;
 	valid_out <= valid_in;
 
-	u_multi_mod_control: entity work.multi_mod_control
-		port map (
-
-		);
-
-
-	u_multi_mod_datapath: entity work.multi_mod_datapath
-		port map (
-			A_in => message;
-			B_in => message;
-
-			n_in => key;
-
-			M_out => result;
-
-			clk => clk;
-			reset_n => reset_n;
-		);
+	
 
 
 end expBehave;

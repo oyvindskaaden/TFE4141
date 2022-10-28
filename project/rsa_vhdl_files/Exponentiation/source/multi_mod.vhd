@@ -32,12 +32,92 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity multi_mod is
---  Port ( );
+    Generic (
+		C_block_size : integer := 256
+    );
+    Port (
+        clk         : in std_logic;
+        reset_n     : in std_logic;
+    
+        A_in        : in std_logic_vector(C_block_size-1 downto 0);
+        B_in        : in std_logic_vector(C_block_size-1 downto 0);
+        N_in        : in std_logic_vector(C_block_size-1 downto 0);
+        
+        M_out       : out std_logic_vector(C_block_size-1 downto 0)
+    );
 end multi_mod;
 
 architecture Behavioral of multi_mod is
+    signal borrow_1n, borrow_2n     : std_logic;
+    signal mod_sel                  : std_logic_vector(1 downto 0);
+    
+    signal A_reg_load               : std_logic;
+    signal B_reg_load               : std_logic;
+    signal M_reg_load               : std_logic;
+    signal N_reg_load               : std_logic;
+    
+    signal B_reg_sel                : std_logic;
 
 begin
+    u_multi_mod_control: entity work.multi_mod_control
+		port map (
+		    -- Clock and Reset
+	        clk      => clk,
+            reset_n  => reset_n,
+            
+            -- Register load signals
+            A_reg_load  => A_reg_load,
+            B_reg_load  => B_reg_load,
+            N_reg_load  => N_reg_load,
+            
+            M_reg_load  => M_reg_load,
+            
+            -- Source selction for the B register
+            B_reg_sel   => B_reg_sel,
+            
+            -- Borrow signals
+            borrow_1n   => borrow_1n,
+            borrow_2n   => borrow_2n,
+            
+            -- Selection of correct calculation result
+            mod_sel     => mod_sel
+            
+		);
+
+
+	u_multi_mod_datapath: entity work.multi_mod_datapath 
+        port map (
+	        -- Clock and Reset
+	        clk      => clk,
+            reset_n  => reset_n,
+            
+            -- Data in connection
+            A_in     => A_in,
+			B_in     => B_in,
+			N_in     => N_in,
+
+            -- Data out connection
+			M_out    => M_out,
+
+            -- Register load signals
+            A_reg_load  => A_reg_load,
+            B_reg_load  => B_reg_load,
+            N_reg_load  => N_reg_load,
+            
+            M_reg_load  => M_reg_load,
+			
+			-- Source selction for the B register
+            B_reg_sel   => B_reg_sel,
+            
+            -- Borrow signals
+            borrow_1n   => borrow_1n,
+            borrow_2n   => borrow_2n,
+            
+            -- Selection of correct calculation result
+            mod_sel     => mod_sel
+		);
+	
+
 
 
 end Behavioral;
