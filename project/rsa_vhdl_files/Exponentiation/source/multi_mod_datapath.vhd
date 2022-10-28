@@ -24,7 +24,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -67,14 +67,19 @@ architecture Behavioral of multi_mod_datapath is
     signal B_r : std_logic_vector(C_block_size-1 downto 0);
     signal N_r : std_logic_vector(C_block_size-1 downto 0);
     signal M_r : std_logic_vector(C_block_size-1 downto 0);
+    
+    signal B_msb            : std_logic;
 
     signal a_reg_sel : std_logic;
 
-    signal A_mux            : std_logic_vector(C_block_size-1 downto 0);
+    --signal A_mux            : std_logic_vector(C_block_size-1 downto 0);
     signal partial_sum      : std_logic_vector(C_block_size-1 downto 0);
     signal partial_mod_1n   : std_logic_vector(C_block_size-1 downto 0);
     signal partial_mod_2n   : std_logic_vector(C_block_size-1 downto 0);
 begin
+    
+    B_msb <= B_r(255)
+
     --A Register
     process(clk, reset_n, A_in) begin
         if(reset_n = '0') begin

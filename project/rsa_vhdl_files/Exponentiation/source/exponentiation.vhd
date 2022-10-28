@@ -1,5 +1,35 @@
-library ieee;
-use ieee.std_logic_1164.all;
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 10/18/2022 11:31:01 AM
+-- Design Name: 
+-- Module Name: multi_mod_datapath - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity exponentiation is
 	generic (
@@ -37,13 +67,13 @@ begin
 	ready_in <= ready_out;
 	valid_out <= valid_in;
 
-	multi_mod_control: entity work.multi_mod_control
+	u_multi_mod_control: entity work.multi_mod_control
 		port map (
 
-		)
+		);
 
 
-	multi_mod_datapath: entity work.multi_mod_datapath
+	u_multi_mod_datapath: entity work.multi_mod_datapath
 		port map (
 			A_in => message;
 			B_in => message;
