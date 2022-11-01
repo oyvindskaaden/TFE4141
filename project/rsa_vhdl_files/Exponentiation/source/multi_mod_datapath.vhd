@@ -40,6 +40,8 @@ entity multi_mod_datapath is
         -- Clock and reset
         reset_n     : in std_logic;
         clk         : in std_logic;
+        
+        mm_reset_n  : in std_logic;
     
         A_in        : in std_logic_vector(C_block_size-1 downto 0);
         B_in        : in std_logic_vector(C_block_size-1 downto 0);

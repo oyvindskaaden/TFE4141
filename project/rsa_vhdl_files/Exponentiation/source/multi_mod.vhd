@@ -61,13 +61,19 @@ architecture Behavioral of multi_mod is
     signal N_reg_load               : std_logic;
     
     signal B_reg_sel                : std_logic;
+    
+    
+    signal mm_reset_n               : std_logic;
 
 begin
     u_multi_mod_control: entity work.multi_mod_control
 		port map (
 		    -- Clock and Reset
-	        clk                => clk,
+	        clk                 => clk,
             reset_n             => reset_n,
+                                
+            mm_reset_n          => mm_reset_n,
+
             
             -- Data readiness
             mm_data_in_ready    => mm_data_in_ready,
@@ -98,6 +104,8 @@ begin
 	        -- Clock and Reset
 	        clk         => clk,
             reset_n     => reset_n,
+            
+            mm_reset_n  => mm_reset_n,
             
             -- Data in connection
             A_in        => A_in,

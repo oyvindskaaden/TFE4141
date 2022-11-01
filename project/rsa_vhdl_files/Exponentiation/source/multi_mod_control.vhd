@@ -56,6 +56,8 @@ entity multi_mod_control is
         borrow_1n   : in std_logic;
         borrow_2n   : in std_logic;
 
+        mm_reset_n  : out std_logic;
+
         -- Reset and Clock
         reset_n     : in std_logic;
         clk         : in std_logic
@@ -70,7 +72,11 @@ architecture Behavioral of multi_mod_control is
     
     type state is (IDLE, SETUP, RUNNING, DONE);
     signal curr_state, next_state : state;
+    
+    signal borrow       :std_logic_vector(1 downto 0);
 begin
+
+    borrow <= (borrow_1n & borrow_2n);
 
     counter : entity work.counter 
     generic map (
@@ -82,56 +88,125 @@ begin
       y             => cnt_out);
 
 
-    A_reg_load <= mm_data_in_ready;
-    N_reg_load <= mm_data_in_ready;
-    
-
-    process(mm_data_in_ready, cnt_out) begin
-        if(mm_data_in_ready = '1') then
-            cnt_reset_n <= '0';
-            
-            if(cnt_out = 255) then
-                cnt_en <= '0';
-            else
-                cnt_en <= '1';
-            end if;
-        else
-            cnt_en <= '0';
-            cnt_reset_n <= '1';
-            
-        end if; 
-
-    end process;
-
-
     fsmComb : process(curr_state) begin
         case (curr_state) is
         when IDLE =>
+            mm_reset_n <= '0';
+            
             cnt_en <= '0';
             cnt_reset_n <= '0';
             
+            A_reg_load <= '0';
+            N_reg_load <= '0';
+            M_reg_load <= '0';
+            B_reg_load <= '0';
             
+            B_reg_sel <= '0';
+            
+            mm_data_out_ready <= '0';
+            
+            if(mm_data_in_ready = '1') then
+                next_state <= SETUP;
+            else
+                next_state <= IDLE;
+            end if;
+            
+            
+        when SETUP => 
+            mm_reset_n <= '1';
+            
+            cnt_en <= '0';
+            cnt_reset_n <= '0';
+            
+            A_reg_load <= '1';
+            N_reg_load <= '1';
+            B_reg_load <= '1';
+            M_reg_load <= '0';
+
+            
+            B_reg_sel <= '0';
+            
+            mm_data_out_ready <= '0';
+
             if(mm_data_in_ready = '1') then
                 next_state <= RUNNING;
             else
                 next_state <= IDLE;
             end if;
+           
+           
+            
         when RUNNING =>
+            mm_reset_n <= '1';
+            
             cnt_en <= '1';
             cnt_reset_n <= '1';
             
-            if(cnt_out = 255) then
+            A_reg_load <= '0';
+            N_reg_load <= '0';
+            B_reg_load <= '1';
+            M_reg_load <= '1';
+            
+            B_reg_sel <= '1';
+            
+            mm_data_out_ready <= '0';
+            
+         
+            if(mm_data_in_ready = '0') then
+                next_state <= IDLE;
+            elsif (cnt_out = 255) then
                 next_state <= DONE;
             else
                 next_state <= RUNNING;
             end if;
             
+            if(reset_n = '0') then
+                next_state <= IDLE;
+            end if;
+            
         when DONE =>
-            cnt_en <= '0';
-            cnt_reset_n <= '0';
+            mm_reset_n <= '1';
+            
+            cnt_en <= '1';
+            cnt_reset_n <= '1';
+            
+            A_reg_load <= '0';
+            N_reg_load <= '0';
+            B_reg_load <= '1';
+            M_reg_load <= '1';
+            
+            B_reg_sel <= '1';
+            
+            
+            mm_data_out_ready <= '1';
             
             next_state <= IDLE;
+        end case;
         
-    end process;
+    end process fsmComb;
+    
+    fsmSync : process(reset_n, clk) 
+    begin
+        if (reset_n = '0') then
+            curr_state <= IDLE;
+        elsif rising_edge(clk) then
+            curr_state <= next_state;
+        end if;
+    end process fsmSync;
+    
+    
+    process(borrow) 
+    begin
+        case borrow is
+            when b"00" => --borrow_1n = 0, borrow_2n = 0. 2n <= res < 3n  
+                mod_sel <= b"10";
+            when b"01" => --borrow_1n = 0, borrow_2n = 1.  n <= res < 2n  
+                mod_sel <= b"01";
+            when b"10" => --borrow_1n = 1, borrow_2n = 0. Won't happen
+                mod_sel <= b"11";
+            when b"11" => --borrow_1n = 1, borrow_2n = 1. res <= n  
+                mod_sel <= b"00";
+        end case;
+    end process; 
 
 end Behavioral;
