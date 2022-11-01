@@ -43,12 +43,45 @@ entity exponentiation_control is
         
         --ouput controll
         ready_out	: in    std_logic;
-        valid_out	: out   std_logic
+        valid_out	: out   std_logic;
+        
+        partial_reg_sel     : out std_logic;
+        chipher_reg_sel     : out std_logic;
+        exponent_reg_sel    : out std_logic;
+        
+        partial_reg_load    : out std_logic;
+        chipher_reg_load    : out std_logic;
+        exponent_reg_load   : out std_logic;
+        
+        exponent_lsb        : in std_logic
     );
 end exponentiation_control;
 
 architecture Behavioral of exponentiation_control is
-
+    type state is (IDLE, SETUP, MULTIMOD, RUNNING, DONE);
+    signal curr_state, next_state   : state;
 begin
 
+    expFSM: process (exponent_lsb) begin
+        case (curr_state) is
+            when IDLE       =>
+            
+            when SETUP      =>
+            
+            when MULTIMOD   => 
+            
+            when RUNNING    =>
+            
+            when DONE       =>
+        end case;
+     end process;
+     
+     expSyncFSM: process (clk, reset_n) begin
+        if (reset_n = '0') then
+          curr_state <= IDLE;
+        elsif rising_edge(clk) then
+          curr_state <= next_state;
+        end if;
+    end process;
+    
 end Behavioral;
