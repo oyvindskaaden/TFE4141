@@ -131,6 +131,7 @@ begin
     end process;
 
 
+
     --Adders etc
     process(M_r, A_r, B_r(255),N_r, mod_sel) begin
         if(B_r(255)) then
@@ -141,7 +142,30 @@ begin
         
         partial_sum <= (M_r(254 downto 0) & '0') + A_mux;
 
+    end process;
+    
+    
+-- Subtractors
+    
+--partial_mod_1n <= partial_sum - N_r;
+--partial_mod_2n <= partial_sum - (N_r(254 downto 0) & '0');
+    
+    sub1 : entity work.subtractor_256b
+        port map(
+            A => partial_sum , 
+            B_2s => N_r , 
+            result => partial_mod_1n , 
+            borrow =>borrow_1n );
 
+    sub2 : entity work.subtractor_256b
+        port map(
+            A => partial_sum , 
+            B_2s => (N_r(254 downto 0) & '0') , 
+            result => partial_mod_2n , 
+            borrow =>borrow_2n );
+  
+    -- MUX given mod_sel
+    process(mod_sel) begin
         case mod_sel is
             when b"00" =>
                 M_out <= partial_sum;
@@ -152,17 +176,12 @@ begin
             when b"11" =>
                 M_out <= (others => '0');
         end case;
-
-        --TODO: Fikse borrow
-        partial_mod_1n <= partial_sum - N_r;
-        partial_mod_2n <= partial_sum - (N_r(254 downto 0) & '0');
-
-
+        
 
     end process;
 
-
-
+  
 
 
 end Behavioral;
+
