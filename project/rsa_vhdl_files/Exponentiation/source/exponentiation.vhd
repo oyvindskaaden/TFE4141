@@ -62,7 +62,6 @@ end exponentiation;
 
 
 architecture expBehave of exponentiation is
-begin
 	--result <= message xor modulus;
 	--ready_in <= ready_out;
 	--valid_out <= valid_in;
@@ -77,6 +76,19 @@ begin
 
 	signal exponent_lsb	  : std_logic;
 	signal exponent_is_0  : std_logic;
+	
+	
+    -- Reg control
+    signal partial_reg_sel   : std_logic;
+    signal chipher_reg_sel   : std_logic;
+    signal exponent_reg_sel  : std_logic;
+    
+    -- Reg Load Control
+    signal partial_reg_load  : std_logic;
+    signal chipher_reg_load  : std_logic;
+    signal exponent_reg_load : std_logic;
+
+begin
 
 	u_exponentiation_control: entity work.exponentiation_control
 	   port map (
@@ -102,7 +114,17 @@ begin
 
 			-- Exponentiation data
 			exponent_lsb	  => exponent_lsb,
-			exponent_is_0	  => exponent_is_0
+			exponent_is_0	  => exponent_is_0,
+			
+			-- Reg control
+            partial_reg_sel   => partial_reg_sel,
+            chipher_reg_sel   => chipher_reg_sel,
+            exponent_reg_sel  => exponent_reg_sel,
+
+            -- Reg Load Contro 
+            partial_reg_load  => partial_reg_load,
+            chipher_reg_load  => chipher_reg_load,
+            exponent_reg_load => exponent_reg_load
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
@@ -118,7 +140,7 @@ begin
             modulus 	=> modulus,
             
             --output data
-            result 		=> result
+            result 		=> result,
 
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
@@ -130,7 +152,18 @@ begin
 
 			-- Exponentiation data
 			exponent_lsb	  => exponent_lsb,
-			exponent_is_0	  => exponent_is_0
+			exponent_is_0	  => exponent_is_0,		
+			
+			-- Reg control
+            partial_reg_sel   => partial_reg_sel,
+            chipher_reg_sel   => chipher_reg_sel,
+            exponent_reg_sel  => exponent_reg_sel,
+
+            -- Reg Load Contro 
+            partial_reg_load  => partial_reg_load,
+            chipher_reg_load  => chipher_reg_load,
+            exponent_reg_load => exponent_reg_load
+
 	   );
 
 end expBehave;
