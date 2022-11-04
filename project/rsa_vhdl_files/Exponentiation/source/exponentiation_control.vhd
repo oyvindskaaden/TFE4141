@@ -65,14 +65,108 @@ begin
     expFSM: process (exponent_lsb) begin
         case (curr_state) is
             when IDLE       =>
-            
+                partial_reg_sel   <= '0';
+                chipher_reg_sel   <= '0';
+                exponent_reg_sel  <= '0';
+
+                partial_reg_load  <= '0';
+                chipher_reg_load  <= '0';
+                exponent_reg_load <= '0';
+                
+                ready_in <= '0';
+                valid_out <= '0';
+                
+                mm_dir_partial <= '0';
+                mm_dir_chipher <= '0';
+
+                
+                if (valid_in) then
+                    next_state <= SETUP;
+                end if;
+                
             when SETUP      =>
-            
-            when MULTIMOD   => 
+                partial_reg_sel   <= '0';
+                chipher_reg_sel   <= '0';
+                exponent_reg_sel  <= '0';
+
+                partial_reg_load  <= '1';
+                chipher_reg_load  <= '1';
+                exponent_reg_load <= '1';
+                
+                ready_in <= '1';
+                valid_out <= '0';
+                
+                mm_dir_partial <= '0';
+                mm_dir_chipher <= '0';
+                
+                next_state <= MULTIMOD;
             
             when RUNNING    =>
+                partial_reg_sel   <= '1';
+                chipher_reg_sel   <= '1';
+                exponent_reg_sel  <= '1';
+
+                partial_reg_load  <= '1';
+                chipher_reg_load  <= '1';
+                exponent_reg_load <= '1';
+                
+                ready_in <= '0';
+                valid_out <= '0';
+                
+                mm_dir_partial <= '0';
+                mm_dir_chipher <= '0';
+                
+                if(exponent_is_0 = '1') then
+                    next_state <= DONE;
+                else
+                    next_state <= MULTIMOD;
+                end if;
+                            
+            when MULTIMOD   => 
+                partial_reg_sel   <= '1';
+                chipher_reg_sel   <= '1';
+                exponent_reg_sel  <= '1';
+
+                partial_reg_load  <= '0';
+                chipher_reg_load  <= '0';
+                exponent_reg_load <= '0';
+                
+                mm_dir_partial <= '1';
+                mm_dir_chipher <= '1';
+                
+                ready_in <= '0';
+                valid_out <= '0';
+                
+                if (mm_dor_partial = '1' and mm_dor_chipher = '1') then
+                    next_state <= RUNNING;
+                else
+                    next_state <= MULTIMOD;
+                end if;
             
+
             when DONE       =>
+                
+                partial_reg_sel   <= '0';
+                chipher_reg_sel   <= '0';
+                exponent_reg_sel  <= '0';
+
+                partial_reg_load  <= '0';
+                chipher_reg_load  <= '0';
+                exponent_reg_load <= '0';
+                
+                valid_out <= '1';
+                ready_in <= '0';
+                
+                mm_dir_partial <= '0';
+                mm_dir_chipher <= '0';
+            
+                if(ready_out = '1') then
+                    next_state <= IDLE;
+                else
+                    next_state <= DONE;
+                    
+                end if;
+                
         end case;
      end process;
      
