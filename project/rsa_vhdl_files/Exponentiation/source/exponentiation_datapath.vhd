@@ -71,6 +71,11 @@ architecture Behavioral of exponentiation_datapath is
     signal chipher_reg  : std_logic_vector(C_block_size-1 downto 0);
     signal exponent_reg : std_logic_vector(C_block_size-1 downto 0);
     
+    signal partial_out  : std_logic_vector(C_block_size-1 downto 0);
+    signal chipher_out  : std_logic_vector(C_block_size-1 downto 0);
+
+
+    
     -- MultiMod Data in/out ready for partial block
     signal mm_dir_partial : std_logic;
     signal mm_dor_partial : std_logic;
@@ -90,7 +95,7 @@ begin
             N_in                => modulus,
             
             -- The following is probably wrong
-            M_out               => partial_reg,
+            M_out               => partial_out,
     
             -- MultiMod (mm) data ready signals
             mm_data_in_ready    => mm_dir_partial,
@@ -107,7 +112,7 @@ begin
             N_in                => modulus,
             
             -- The following is probably wrong
-            M_out               => chipher_reg,
+            M_out               => chipher_out,
     
             -- MultiMod (mm) data ready signals
             mm_data_in_ready    => mm_dir_chipher,
@@ -126,7 +131,7 @@ begin
                 -- Set partial to message (data)
                 partial_reg     <= message;
             elsif (partial_reg_sel = '1') then
-                partial_reg     <= partial_reg;
+                partial_reg     <= partial_out;
             end if;
         end if;
     end process;
@@ -138,7 +143,7 @@ begin
             
         elsif (clk'event and clk = '1' and chipher_reg_load = '1') then
             -- This is also probably wrong
-            chipher_reg     <= chipher_reg;
+            chipher_reg     <= chipher_out;
         end if;
     end process;
     
