@@ -167,12 +167,12 @@ begin
     
     -- Check if there are more bits left in the exponent
     process (exponent_reg) begin
-        --if (exponent_reg = std_logic_vector(to_unsigned(0, 256))) then
-        --    exponent_is_0   <= '1';
-        --else
-        --    exponent_is_0   <= '0';
-        --end if;
-        exponent_is_0 <= exponent_reg AND std_logic_vector(to_unsigned(0, 256));
+        if (exponent_reg = std_logic_vector(to_unsigned(0, 256))) then
+            exponent_is_0   <= '1';
+        else
+            exponent_is_0   <= '0';
+        end if;
+        --exponent_is_0 <= exponent_reg AND std_logic_vector(to_unsigned(0, 256));
     end process;
     
     
