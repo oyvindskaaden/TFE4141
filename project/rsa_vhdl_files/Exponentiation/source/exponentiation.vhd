@@ -75,6 +75,9 @@ begin
     signal mm_dir_chipher : std_logic;
     signal mm_dor_chipher : std_logic;
 
+	signal exponent_lsb	  : std_logic;
+	signal exponent_is_0  : std_logic;
+
 	u_exponentiation_control: entity work.exponentiation_control
 	   port map (
 	        -- Clock and Reset
@@ -95,7 +98,11 @@ begin
 			
 			-- MultiMod Data in/out ready for chipher block
 			mm_dir_chipher    => mm_dir_chipher,
-			mm_dor_chipher    => mm_dor_chipher
+			mm_dor_chipher    => mm_dor_chipher,
+
+			-- Exponentiation data
+			exponent_lsb	  => exponent_lsb,
+			exponent_is_0	  => exponent_is_0
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
@@ -119,7 +126,11 @@ begin
 			
 			-- MultiMod Data in/out ready for chipher block
 			mm_dir_chipher    => mm_dir_chipher,
-			mm_dor_chipher    => mm_dor_chipher
+			mm_dor_chipher    => mm_dor_chipher,
+
+			-- Exponentiation data
+			exponent_lsb	  => exponent_lsb,
+			exponent_is_0	  => exponent_is_0
 	   );
 
 end expBehave;

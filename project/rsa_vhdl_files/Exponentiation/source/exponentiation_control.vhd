@@ -52,8 +52,17 @@ entity exponentiation_control is
         partial_reg_load    : out std_logic;
         chipher_reg_load    : out std_logic;
         exponent_reg_load   : out std_logic;
+
+        -- MultiMod Data in/out ready for partial block
+        mm_dir_partial      : in  std_logic;
+        mm_dor_partial      : out std_logic;
         
-        exponent_lsb        : in std_logic
+        -- MultiMod Data in/out ready for chipher block
+        mm_dir_chipher      : in  std_logic;
+        mm_dor_chipher      : out std_logic;
+        
+        exponent_lsb        : in std_logic;
+        exponent_is_0       : in std_logic
     );
 end exponentiation_control;
 
