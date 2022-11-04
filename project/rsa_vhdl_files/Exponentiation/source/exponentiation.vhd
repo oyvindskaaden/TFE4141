@@ -67,6 +67,14 @@ begin
 	--ready_in <= ready_out;
 	--valid_out <= valid_in;
 
+	-- MultiMod Data in/out ready for partial block
+    signal mm_dir_partial : std_logic;
+    signal mm_dor_partial : std_logic;
+    
+    -- MultiMod Data in/out ready for chipher block
+    signal mm_dir_chipher : std_logic;
+    signal mm_dor_chipher : std_logic;
+
 	u_exponentiation_control: entity work.exponentiation_control
 	   port map (
 	        -- Clock and Reset
@@ -79,7 +87,15 @@ begin
             
             --ouput controll
             ready_out   => ready_out,
-            valid_out   => valid_out
+            valid_out   => valid_out,
+
+			-- MultiMod Data in/out ready for partial block
+			mm_dir_partial    => mm_dir_partial,
+			mm_dor_partial    => mm_dor_partial,
+			
+			-- MultiMod Data in/out ready for chipher block
+			mm_dir_chipher    => mm_dir_chipher,
+			mm_dor_chipher    => mm_dor_chipher
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
@@ -96,6 +112,14 @@ begin
             
             --output data
             result 		=> result
+
+			-- MultiMod Data in/out ready for partial block
+			mm_dir_partial    => mm_dir_partial,
+			mm_dor_partial    => mm_dor_partial,
+			
+			-- MultiMod Data in/out ready for chipher block
+			mm_dir_chipher    => mm_dir_chipher,
+			mm_dor_chipher    => mm_dor_chipher
 	   );
 
 end expBehave;

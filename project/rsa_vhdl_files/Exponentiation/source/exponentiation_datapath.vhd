@@ -59,6 +59,14 @@ entity exponentiation_datapath is
 		partial_reg_load  : in std_logic;
 		chipher_reg_load  : in std_logic;
 		exponent_reg_load : in std_logic;
+
+        -- MultiMod Data in/out ready for partial block
+        mm_dir_partial    : in  std_logic;
+        mm_dor_partial    : out std_logic;
+        
+        -- MultiMod Data in/out ready for chipher block
+        mm_dir_chipher    : in  std_logic;
+        mm_dor_chipher    : out std_logic;
 		
 		-- Exponentiation values
 		exponent_lsb      : out std_logic;
@@ -71,13 +79,6 @@ architecture Behavioral of exponentiation_datapath is
     signal chipher_reg  : std_logic_vector(C_block_size-1 downto 0);
     signal exponent_reg : std_logic_vector(C_block_size-1 downto 0);
     
-    -- MultiMod Data in/out ready for partial block
-    signal mm_dir_partial : std_logic;
-    signal mm_dor_partial : std_logic;
-    
-    -- MultiMod Data in/out ready for chipher block
-    signal mm_dir_chipher : std_logic;
-    signal mm_dor_chipher : std_logic;
 
 begin
     u_multi_mod_partial: entity work.multi_mod
