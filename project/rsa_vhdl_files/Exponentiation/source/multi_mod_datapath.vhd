@@ -135,13 +135,16 @@ begin
 
 
     --Adders etc
-    process(M_r, A_r, B_r(C_block_size-1),N_r, mod_sel) begin
+    process(A_r, B_r) begin
         if(B_r(C_block_size-1) = '1') then
             A_mux <= A_r;
         else
             A_mux <= (others =>'0'); 
         end if;
         
+    end process;
+    
+    process(A_mux, M_r) begin
         partial_sum <= (M_r(C_block_size-2 downto 0) & '0') + A_mux;
 
     end process;
@@ -175,7 +178,7 @@ begin
         );
   
     -- MUX given mod_sel
-    process(mod_sel) begin
+    process(mod_sel, clk) begin
         case mod_sel is
             when b"00" =>
                 M_out <= partial_sum;
