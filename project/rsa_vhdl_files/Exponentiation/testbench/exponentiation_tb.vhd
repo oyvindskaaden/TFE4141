@@ -68,6 +68,26 @@ begin
 			reset_n   => reset_n
 		);
 
+	-- Clock generation
+	clk <= not clk after CLK_PERIOD/2;
+
+	-- Reset generation
+	reset_proc: process
+	begin
+		wait for RESET_TIME;
+		reset_n <= '1';
+		wait;
+	end process;
 	
+	-- Stimuli generation
+	stimuli_proc: process
+	begin
+	  	-- Send in first test vector
+		wait for 10*CLK_PERIOD;
+
+	end process;  
+  
+  
+  end Behavioral;
 
 end expBehave;
