@@ -115,8 +115,8 @@ begin
         when SETUP => 
             mm_reset_n <= '1';
             
-            cnt_en <= '0';
-            cnt_reset_n <= '0';
+            cnt_en <= '1';
+            cnt_reset_n <= '1';
             
             A_reg_load <= '1';
             N_reg_load <= '1';
