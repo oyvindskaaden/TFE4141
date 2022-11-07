@@ -30,6 +30,15 @@ end exponentiation_tb;
 
 architecture expBehave of exponentiation_tb is
 
+	-- Constants
+	constant COUNTER_WIDTH : natural := 8;
+	constant CLK_PERIOD    : time := 10 ns;
+	constant RESET_TIME    : time := 10 ns;
+	
+	-- Clocks and resets 
+  	signal clk            : std_logic := '0';
+  	signal reset_n        : std_logic := '0';
+
 	signal message 		: STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
 	signal key 			: STD_LOGIC_VECTOR ( C_block_size-1 downto 0 );
 	signal valid_in 	: STD_LOGIC;
@@ -38,12 +47,14 @@ architecture expBehave of exponentiation_tb is
 	signal valid_out 	: STD_LOGIC;
 	signal result 		: STD_LOGIC_VECTOR(C_block_size-1 downto 0);
 	signal modulus 		: STD_LOGIC_VECTOR(C_block_size-1 downto 0);
-	signal clk 			: STD_LOGIC;
+	
 	signal restart 		: STD_LOGIC;
-	signal reset_n 		: STD_LOGIC;
 
 begin
 	i_exponentiation : entity work.exponentiation
+		generic map (
+			C_block_size        => C_block_size
+		)
 		port map (
 			message   => message  ,
 			key       => key      ,
@@ -57,5 +68,6 @@ begin
 			reset_n   => reset_n
 		);
 
+	
 
 end expBehave;

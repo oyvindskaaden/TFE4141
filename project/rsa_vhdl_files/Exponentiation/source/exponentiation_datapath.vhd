@@ -84,6 +84,9 @@ architecture Behavioral of exponentiation_datapath is
 
 begin
     u_multi_mod_partial: entity work.multi_mod
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map (
             clk                 => clk,
             reset_n             => reset_n,
@@ -101,6 +104,9 @@ begin
         );
         
     u_multi_mod_chipher: entity work.multi_mod
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map (
             clk                 => clk,
             reset_n             => reset_n,
@@ -144,7 +150,7 @@ begin
             
             if (chipher_reg_sel = '0') then
                 -- Set partial to message (data)
-                chipher_reg     <= std_logic_vector(to_unsigned(1, 256));
+                chipher_reg     <= std_logic_vector(to_unsigned(1, C_block_size));
             elsif (chipher_reg_sel = '1') then
                 chipher_reg     <= chipher_out;
             end if;           
@@ -173,7 +179,7 @@ begin
     
     -- Check if there are more bits left in the exponent
     process (exponent_reg) begin
-        if (exponent_reg = std_logic_vector(to_unsigned(0, 256))) then
+        if (exponent_reg = std_logic_vector(to_unsigned(0, C_block_size))) then
             exponent_is_0   <= '1';
         else
             exponent_is_0   <= '0';
