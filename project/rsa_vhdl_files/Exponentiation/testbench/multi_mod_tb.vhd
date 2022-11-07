@@ -93,6 +93,20 @@ begin
 
 	    wait for 10*CLK_PERIOD;
 
+	   --TESTS
+    	A_in <= x"07659b124f9afa93";
+    	B_in <= x"08849308493143dd";
+    	N_in <= x"F58A967DBC6A7053"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_ready <= '1';
+    	
+    	--OUT = 13
+    	wait for 70*CLK_PERIOD;
+    	mm_data_in_ready <= '0';
+    	wait for CLK_PERIOD;
+
+    	--MORE TESTS
+    	
+	   
 	   
 	   
 	   
