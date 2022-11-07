@@ -154,7 +154,7 @@ begin
          
             if(mm_data_in_ready = '0') then
                 next_state <= IDLE;
-            elsif (cnt_out = C_block_size-1) then
+            elsif (cnt_out = C_block_size) then
                 next_state <= DONE;
             else
                 next_state <= RUNNING;

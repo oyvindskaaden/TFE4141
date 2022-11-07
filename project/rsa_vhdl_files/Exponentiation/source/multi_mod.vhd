@@ -109,9 +109,9 @@ begin
         port map (
 	        -- Clock and Reset
 	        clk         => clk,
-            reset_n     => reset_n,
+            --reset_n     => reset_n,
             
-            mm_reset_n  => mm_reset_n,
+            reset_n  => mm_reset_n,
             
             -- Data in connection
             A_in        => A_in,

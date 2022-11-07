@@ -94,6 +94,8 @@ begin
 	    wait for 10*CLK_PERIOD;
 
 	   
+	   
+	   
     	--TESTS
     	A_in <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
     	B_in <= std_logic_vector(to_unsigned( 16#10#, C_block_size));
@@ -102,7 +104,48 @@ begin
     	
     	--OUT = 42
     	wait for 70*CLK_PERIOD;
+    	mm_data_in_ready <= '0';
+    	wait for CLK_PERIOD;
+    	
+    	--TESTS
+    	A_in <= std_logic_vector(to_unsigned( 16#1#, C_block_size));
+    	B_in <= std_logic_vector(to_unsigned( 16#42#, C_block_size));
+    	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_ready <= '1';
+    	
+    	--OUT = 42
+    	wait for 70*CLK_PERIOD;
+    	mm_data_in_ready <= '0';
+    	wait for CLK_PERIOD;
+
     	--MORE TESTS
+    	
+    	--TESTS
+    	A_in <= std_logic_vector(to_unsigned( 16#42#, C_block_size));
+    	B_in <= std_logic_vector(to_unsigned( 16#43#, C_block_size));
+    	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_ready <= '1';
+    	
+    	--OUT = 13
+    	wait for 70*CLK_PERIOD;
+    	mm_data_in_ready <= '0';
+    	wait for CLK_PERIOD;
+    	
+    	--TESTS
+    	A_in <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
+    	B_in <= std_logic_vector(to_unsigned( 16#56#, C_block_size));
+    	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_ready <= '1';
+    	
+    	--OUT = 13
+    	wait for 70*CLK_PERIOD;
+    	mm_data_in_ready <= '0';
+    	wait for CLK_PERIOD;
+
+    	--MORE TESTS
+    	
+    	
+    	
         
         assert false report "Test done." severity note;
     	wait;
