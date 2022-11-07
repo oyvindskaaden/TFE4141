@@ -57,8 +57,12 @@ uint64_t RSA(
 
     while (exponent)
     {
-        if (exponent & 1)
+        if (exponent & 1) {
+            printf("chipher = ModMulti(%lx, %lx, %lx)\n",chipher,partial,n);
             chipher = ModMulti(chipher, partial, n);
+            printf("chipher = %lx \n",chipher);
+        }
+            
         
         partial = ModMulti(partial, partial, n);
         exponent >>= 1;
@@ -77,9 +81,9 @@ int main(int argc, char const *argv[])
     uint64_t chipher    = RSA(message, pub_key, n);
     uint64_t decrypted  = RSA(chipher, priv_key, n);
 
-    printf("Message are: \t\t%llu\n", message);
-    printf("Chipher are: \t\t%llu\n", chipher);
-    printf("Decrypted message are: \t%llu\n", decrypted);
+    printf("Message are: \t\t%lu\n", message);
+    printf("Chipher are: \t\t%lu\n", chipher);
+    printf("Decrypted message are: \t%lu\n", decrypted);
 
     return 0;
 }
