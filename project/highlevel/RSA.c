@@ -90,10 +90,10 @@ int main(int argc, char const *argv[])
                 B       = 0x8849308493143DD,
                 N       = 0xA75698243958FAD;
 
-    printf("A:\t%lx\nB:\t%lx\nN:\t%lx\n", A, B, N);
+    printf("A:\t0x%016lx\nB:\t0x%016lx\nN:\t0x%016lx\n", A, B, N);
 
     uint64_t    res     = ModMulti(A, B, N);
-    printf("Result: %lx\n", res);
+    printf("Result: 0x%016lx\n", res);
 
     return 0;
 }
