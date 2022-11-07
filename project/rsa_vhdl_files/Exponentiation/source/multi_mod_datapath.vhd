@@ -41,7 +41,6 @@ entity multi_mod_datapath is
         reset_n     : in std_logic;
         clk         : in std_logic;
         
-        mm_reset_n  : in std_logic;
     
         A_in        : in std_logic_vector(C_block_size-1 downto 0);
         B_in        : in std_logic_vector(C_block_size-1 downto 0);
@@ -178,7 +177,7 @@ begin
         );
   
     -- MUX given mod_sel
-    process(mod_sel, clk) begin
+    process(clk) begin
         case mod_sel is
             when b"00" =>
                 M_out <= partial_sum;

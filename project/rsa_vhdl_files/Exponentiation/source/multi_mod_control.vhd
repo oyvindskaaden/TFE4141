@@ -115,8 +115,8 @@ begin
         when SETUP => 
             mm_reset_n <= '1';
             
-            cnt_en <= '0';
-            cnt_reset_n <= '0';
+            cnt_en <= '1';
+            cnt_reset_n <= '1';
             
             A_reg_load <= '1';
             N_reg_load <= '1';
@@ -154,7 +154,7 @@ begin
          
             if(mm_data_in_ready = '0') then
                 next_state <= IDLE;
-            elsif (cnt_out = C_block_size-1) then
+            elsif (cnt_out = C_block_size) then
                 next_state <= DONE;
             else
                 next_state <= RUNNING;
