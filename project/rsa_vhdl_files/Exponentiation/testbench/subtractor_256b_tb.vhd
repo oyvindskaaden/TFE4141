@@ -33,6 +33,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity subtractor_256b_tb is
 --  Port ( );
+	generic (
+		C_block_size : integer := 256
+	);
 end subtractor_256b_tb;
 
 architecture Behavioral of subtractor_256b_tb is
@@ -40,7 +43,15 @@ architecture Behavioral of subtractor_256b_tb is
     signal borrow,borrow2 : std_logic;
 begin
 	DUT: entity work.subtractor_256b
-    	port map(A => A, B_2s => B_2s, result => result, borrow => borrow);
+		generic map (
+			C_block_size        => C_block_size
+		)
+    	port map(
+			A => A, 
+			B_2s => B_2s, 
+			result => result, 
+			borrow => borrow
+		);
         
 stimulus: process is
 	begin

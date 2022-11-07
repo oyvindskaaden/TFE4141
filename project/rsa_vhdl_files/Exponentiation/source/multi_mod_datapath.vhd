@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_SIGNED.ALL;
 
 entity multi_mod_datapath is
 	generic (
-		C_block_size : integer := 64
+		C_block_size : integer := 256
 	);
     port (
         -- Clock and reset
@@ -153,18 +153,26 @@ begin
 --partial_mod_2n <= partial_sum - (N_r(254 downto 0) & '0');
     
     sub1 : entity work.subtractor_256b
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map(
             A => partial_sum , 
             B_2s => N_r , 
             result => partial_mod_1n , 
-            borrow =>borrow_1n );
+            borrow =>borrow_1n
+        );
 
     sub2 : entity work.subtractor_256b
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map(
             A => partial_sum , 
             B_2s => (N_r(C_block_size-2 downto 0) & '0') , 
             result => partial_mod_2n , 
-            borrow =>borrow_2n );
+            borrow =>borrow_2n 
+        );
   
     -- MUX given mod_sel
     process(mod_sel) begin
@@ -178,8 +186,6 @@ begin
             when others =>
                 M_out <= (others => '0');
         end case;
-        
-
     end process;
 
   

@@ -52,6 +52,9 @@ architecture expBehave of exponentiation_tb is
 
 begin
 	i_exponentiation : entity work.exponentiation
+		generic map (
+			C_block_size        => C_block_size
+		)
 		port map (
 			message   => message  ,
 			key       => key      ,

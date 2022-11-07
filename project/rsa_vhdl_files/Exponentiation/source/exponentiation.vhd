@@ -91,7 +91,10 @@ architecture expBehave of exponentiation is
 begin
 
 	u_exponentiation_control: entity work.exponentiation_control
-	   port map (
+		generic map (
+			C_block_size        => C_block_size
+		)
+	   	port map (
 	        -- Clock and Reset
             clk         => clk,
             reset_n     => reset_n,
@@ -128,6 +131,9 @@ begin
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
+		generic map (
+			C_block_size        => C_block_size
+		)
         port map (
             clk         => clk,
             reset_n     => reset_n,

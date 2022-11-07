@@ -35,7 +35,7 @@ use IEEE.STD_LOGIC_SIGNED.ALL;
 
 entity subtractor_256b is
     generic (
-		C_block_size : integer := 64
+		C_block_size : integer := 256
 	);
     port ( 
         A       : in std_logic_vector(C_block_size-1 downto 0);

@@ -66,6 +66,9 @@ begin
     end process;
     
     DUT : entity work.multi_mod
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map(  
             clk                 => clk,
             reset_n             => reset_n,

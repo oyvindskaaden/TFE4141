@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity multi_mod is
     Generic (
-		C_block_size : integer := 64
+		C_block_size : integer := 256
     );
     Port (
         clk                 : in    std_logic;
@@ -67,6 +67,9 @@ architecture Behavioral of multi_mod is
 
 begin
     u_multi_mod_control: entity work.multi_mod_control
+        generic map (
+            C_block_size        => C_block_size
+        )
 		port map (
 		    -- Clock and Reset
 	        clk                 => clk,
@@ -100,6 +103,9 @@ begin
 
 
 	u_multi_mod_datapath: entity work.multi_mod_datapath 
+        generic map (
+            C_block_size        => C_block_size
+        )
         port map (
 	        -- Clock and Reset
 	        clk         => clk,

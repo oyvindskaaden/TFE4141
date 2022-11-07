@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity multi_mod_control is
     generic (
-		C_block_size : integer := 64;
+		C_block_size : integer := 256;
 		COUNTER_WIDTH : integer := 8
 	);
     Port (
