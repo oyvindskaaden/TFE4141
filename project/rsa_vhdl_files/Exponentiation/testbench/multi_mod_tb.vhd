@@ -24,7 +24,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -34,13 +34,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity multi_mod_tb is
 --  Port ( );
     Generic (
-		C_block_size : integer := 256
+		C_block_size : integer := 64
     );
 end multi_mod_tb;
 
 architecture Behavioral of multi_mod_tb is
-    signal clk                 : std_logic;
-    signal reset_n             : std_logic;
+    constant CLK_PERIOD : time := 10 ns;
+    constant RESET_TIME : time := 10 ns;
+
+    signal clk                 : std_logic := '0';
+    signal reset_n             : std_logic := '0';
      
     signal A_in                : std_logic_vector(C_block_size-1 downto 0);
     signal B_in                : std_logic_vector(C_block_size-1 downto 0);
@@ -49,10 +52,19 @@ architecture Behavioral of multi_mod_tb is
     signal M_out               : std_logic_vector(C_block_size-1 downto 0);
      
      -- MultiMod (mm) data signals
-    signal mm_data_in_ready    : std_logic;
+    signal mm_data_in_ready    : std_logic := '0';
     signal mm_data_out_ready   : std_logic;
     
 begin
+    clk <= not clk after CLK_PERIOD/2;
+    
+    resec_proc: process
+    begin
+        wait for RESET_TIME;
+        reset_n <= '1';
+        wait;
+    end process;
+    
     DUT : entity work.multi_mod
         port map(  
             clk                 => clk,
@@ -73,15 +85,28 @@ begin
             
         );
         
- stimulus: process is
+    stimulus: process is
 	begin
+
+	    wait for 10*CLK_PERIOD;
+
+	   
     	--TESTS
-    	wait for 10 ns ;
+    	A_in <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
+    	B_in <= std_logic_vector(to_unsigned( 16#10#, C_block_size));
+    	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_ready <= '1';
+    	
+    	--OUT = 42
+    	wait for 70*CLK_PERIOD;
     	--MORE TESTS
         
         assert false report "Test done." severity note;
     	wait;
 	end process stimulus;
+	
+	
+
 
 
 end Behavioral;       

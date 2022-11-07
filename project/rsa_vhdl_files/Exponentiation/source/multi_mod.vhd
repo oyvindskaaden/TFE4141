@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity multi_mod is
     Generic (
-		C_block_size : integer := 256
+		C_block_size : integer := 64
     );
     Port (
         clk                 : in    std_logic;

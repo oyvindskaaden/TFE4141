@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity multi_mod_control is
     generic (
-		C_block_size : integer := 256;
+		C_block_size : integer := 64;
 		COUNTER_WIDTH : integer := 8
 	);
     Port (
@@ -88,7 +88,7 @@ begin
       y             => cnt_out);
 
 
-    fsmComb : process(curr_state) begin
+    fsmComb : process(curr_state, clk) begin
         case (curr_state) is
         when IDLE =>
             mm_reset_n <= '0';
@@ -154,7 +154,7 @@ begin
          
             if(mm_data_in_ready = '0') then
                 next_state <= IDLE;
-            elsif (cnt_out = 255) then
+            elsif (cnt_out = C_block_size-1) then
                 next_state <= DONE;
             else
                 next_state <= RUNNING;
@@ -202,10 +202,10 @@ begin
                 mod_sel <= b"10";
             when b"01" => --borrow_1n = 0, borrow_2n = 1.  n <= res < 2n  
                 mod_sel <= b"01";
-            when b"10" => --borrow_1n = 1, borrow_2n = 0. Won't happen
-                mod_sel <= b"11";
             when b"11" => --borrow_1n = 1, borrow_2n = 1. res <= n  
                 mod_sel <= b"00";
+            when others => --borrow_1n = 1, borrow_2n = 0. Won't happen
+                mod_sel <= b"11";
         end case;
     end process; 
 
