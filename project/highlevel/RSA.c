@@ -85,6 +85,16 @@ int main(int argc, char const *argv[])
     printf("Chipher are: \t\t%lu\n", chipher);
     printf("Decrypted message are: \t%lu\n", decrypted);
 
+
+    uint64_t    A       = 0x7659B124F9AFA93,
+                B       = 0x8849308493143DD,
+                N       = 0xA75698243958FAD;
+
+    printf("A:\t%lx\nB:\t%lx\nN:\t%lx\n", A, B, N);
+
+    uint64_t    res     = ModMulti(A, B, N);
+    printf("Result: %lx\n", res);
+
     return 0;
 }
 
