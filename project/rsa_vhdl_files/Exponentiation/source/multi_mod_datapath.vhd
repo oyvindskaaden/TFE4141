@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_SIGNED.ALL;
 
 entity multi_mod_datapath is
 	generic (
-		C_block_size : integer := 256
+		C_block_size : integer := 64
 	);
     port (
         -- Clock and reset
@@ -72,7 +72,7 @@ architecture Behavioral of multi_mod_datapath is
     
     signal B_msb            : std_logic;
 
-    signal a_reg_sel : std_logic;
+    --signal a_reg_sel : std_logic;
 
     signal partial_sum      : std_logic_vector(C_block_size-1 downto 0);
     signal partial_mod_1n   : std_logic_vector(C_block_size-1 downto 0);
@@ -80,7 +80,7 @@ architecture Behavioral of multi_mod_datapath is
     
 begin
     
-    B_msb <= B_r(255);
+    B_msb <= B_r(C_block_size-1);
 
     --A Register
     process(clk, reset_n, A_in) begin
@@ -96,26 +96,28 @@ begin
     --B Register
     process(clk, reset_n, B_in) begin
         if(reset_n = '0') then
-            A_r <= (others => '0');
+            B_r <= (others => '0');
         elsif(clk'event and clk='1' and B_reg_load='1') then
             if(B_reg_sel='0') then
                 B_r <= B_in;
             elsif(B_reg_sel='1') then
-                B_r <= B_r(254 downto 0) & '0';
+                B_r <= B_r(C_block_size-2 downto 0) & '0';
             end if;
         end if;
     end process;
 
     --N Register
-    process(clk, reset_n, N_in) begin
-        if(reset_n = '0') then
-            N_r <= (others => '0');
-        elsif(clk'event and clk='1') then
-            if(N_reg_load='1') then
-                N_r <= N_in;
-            end if;
-        end if;
-    end process;
+    
+    --process(clk, reset_n, N_in) begin
+    --    if(reset_n = '0') then
+    --        N_r <= (others => '0');
+    --    elsif(clk'event and clk='1') then
+    --        if(N_reg_load='1') then
+    --            N_r <= N_in;
+    --        end if;
+    --    end if;
+    --end process;
+    N_r <= N_in;
     
     --M Register
     process(clk, reset_n) begin
@@ -133,14 +135,14 @@ begin
 
 
     --Adders etc
-    process(M_r, A_r, B_r(255),N_r, mod_sel) begin
-        if(B_r(255)) then
+    process(M_r, A_r, B_r(C_block_size-1),N_r, mod_sel) begin
+        if(B_r(C_block_size-1) = '1') then
             A_mux <= A_r;
         else
             A_mux <= (others =>'0'); 
         end if;
         
-        partial_sum <= (M_r(254 downto 0) & '0') + A_mux;
+        partial_sum <= (M_r(C_block_size-2 downto 0) & '0') + A_mux;
 
     end process;
     
@@ -160,7 +162,7 @@ begin
     sub2 : entity work.subtractor_256b
         port map(
             A => partial_sum , 
-            B_2s => (N_r(254 downto 0) & '0') , 
+            B_2s => (N_r(C_block_size-2 downto 0) & '0') , 
             result => partial_mod_2n , 
             borrow =>borrow_2n );
   
@@ -173,7 +175,7 @@ begin
                 M_out <= partial_mod_1n;
             when b"10" =>
                 M_out <= partial_mod_2n;
-            when b"11" =>
+            when others =>
                 M_out <= (others => '0');
         end case;
         
