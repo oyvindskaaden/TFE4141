@@ -74,7 +74,7 @@ architecture Behavioral of exponentiation_control is
     signal curr_state, next_state   : state;
 begin
 
-    expFSM: process (exponent_lsb) begin
+    expFSM: process (clk) begin
         case (curr_state) is
             when IDLE       =>
                 partial_reg_sel   <= '0';
@@ -92,7 +92,7 @@ begin
                 mm_dir_chipher <= '0';
 
                 
-                if (valid_in) then
+                if (valid_in = '1') then
                     next_state <= SETUP;
                 end if;
                 
@@ -119,7 +119,7 @@ begin
                 exponent_reg_sel  <= '1';
 
                 partial_reg_load  <= '1';
-                chipher_reg_load  <= '1';
+                --chipher_reg_load  <= '1';
                 exponent_reg_load <= '1';
                 
                 ready_in <= '0';
@@ -127,6 +127,12 @@ begin
                 
                 mm_dir_partial <= '0';
                 mm_dir_chipher <= '0';
+                
+                if(exponent_lsb = '1') then
+                    chipher_reg_load  <= '1';
+                else
+                    chipher_reg_load  <= '0';
+                end if;
                 
                 if(exponent_is_0 = '1') then
                     next_state <= DONE;

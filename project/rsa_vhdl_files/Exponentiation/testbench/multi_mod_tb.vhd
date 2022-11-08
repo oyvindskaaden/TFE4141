@@ -100,7 +100,11 @@ begin
     	mm_data_in_ready <= '1';
     	
     	--OUT = 13
-    	wait for 70*CLK_PERIOD;
+    	--wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_ready = '1';
+    	
+    	
+    	assert M_out = x"4f02674256cb793";
     	mm_data_in_ready <= '0';
     	wait for CLK_PERIOD;
 
@@ -117,7 +121,9 @@ begin
     	mm_data_in_ready <= '1';
     	
     	--OUT = 42
-    	wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_ready = '1';
+    	assert M_out = std_logic_vector(to_unsigned( 16#42#, C_block_size));
+    	wait for CLK_PERIOD;
     	mm_data_in_ready <= '0';
     	wait for CLK_PERIOD;
     	
@@ -128,7 +134,9 @@ begin
     	mm_data_in_ready <= '1';
     	
     	--OUT = 42
-    	wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_ready = '1';
+    	assert M_out = std_logic_vector(to_unsigned( 16#42#, C_block_size));
+    	wait for CLK_PERIOD;
     	mm_data_in_ready <= '0';
     	wait for CLK_PERIOD;
 
@@ -141,7 +149,9 @@ begin
     	mm_data_in_ready <= '1';
     	
     	--OUT = 13
-    	wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_ready = '1';
+    	assert M_out = std_logic_vector(to_unsigned( 16#13#, C_block_size));
+    	wait for CLK_PERIOD;
     	mm_data_in_ready <= '0';
     	wait for CLK_PERIOD;
     	
@@ -152,7 +162,9 @@ begin
     	mm_data_in_ready <= '1';
     	
     	--OUT = 13
-    	wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_ready = '1';
+    	assert M_out = std_logic_vector(to_unsigned( 16#13#, C_block_size));
+    	wait for CLK_PERIOD;
     	mm_data_in_ready <= '0';
     	wait for CLK_PERIOD;
 

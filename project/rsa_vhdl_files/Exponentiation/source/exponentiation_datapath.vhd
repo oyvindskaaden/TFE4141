@@ -123,6 +123,7 @@ begin
             mm_data_out_ready   => mm_dor_chipher
         );
        
+    result <= chipher_out;
     
     -- Partial reg
     process (clk, reset_n) begin
@@ -165,7 +166,7 @@ begin
             
         elsif (clk'event and clk = '1' and exponent_reg_sel = '1') then
             if (exponent_reg_sel = '1') then
-                exponent_reg    <= '0' & exponent_reg(255 downto 1);
+                exponent_reg    <= '0' & exponent_reg(C_block_size-1 downto 1);
             else
                 exponent_reg    <= key;
             end if;

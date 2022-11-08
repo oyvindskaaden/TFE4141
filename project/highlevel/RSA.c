@@ -108,6 +108,8 @@ int main(int argc, char const *argv[])
     uint64_t n          = 119;
     uint64_t priv_key   = 77;
 
+    printf("message: %x, pub_key: %x, n: %x, priv_key: %x\n", message, pub_key, n, priv_key);
+
     uint64_t chipher    = RSA(message, pub_key, n);
     uint64_t decrypted  = RSA(chipher, priv_key, n);
 

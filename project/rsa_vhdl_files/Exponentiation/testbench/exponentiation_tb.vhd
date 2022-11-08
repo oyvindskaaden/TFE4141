@@ -19,11 +19,13 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use IEEE.NUMERIC_STD.ALL;
+
 
 
 entity exponentiation_tb is
 	generic (
-		C_block_size : integer := 256
+		C_block_size : integer := 64
 	);
 end exponentiation_tb;
 
@@ -84,6 +86,17 @@ begin
 	begin
 	  	-- Send in first test vector
 		wait for 10*CLK_PERIOD;
+		message   <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
+        key       <= std_logic_vector(to_unsigned( 16#5#, C_block_size));
+        modulus   <= x"FFFFFFFFFFFFFF89"; --2s complement of 0x77
+        valid_in  <= '1';
+        
+        wait until ready_in = '1';
+        wait until valid_out = '1';
+        ready_out <= '1';
+		
+		assert false report "Test done." severity note;
+    	wait;
 
 	end process;  
   
