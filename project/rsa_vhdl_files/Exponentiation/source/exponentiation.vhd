@@ -69,10 +69,14 @@ architecture expBehave of exponentiation is
 	-- MultiMod Data in/out ready for partial block
     signal mm_dir_partial : std_logic;
     signal mm_dor_partial : std_logic;
+    signal mm_div_partial : std_logic;
+    signal mm_dov_partial : std_logic;
     
     -- MultiMod Data in/out ready for chipher block
     signal mm_dir_chipher : std_logic;
     signal mm_dor_chipher : std_logic;
+    signal mm_div_chipher : std_logic;
+    signal mm_dov_chipher : std_logic;
 
 	signal exponent_lsb	  : std_logic;
 	signal exponent_is_0  : std_logic;
@@ -110,10 +114,14 @@ begin
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
 			mm_dor_partial    => mm_dor_partial,
+			mm_div_partial    => mm_div_partial,
+			mm_dov_partial    => mm_dov_partial,
 			
 			-- MultiMod Data in/out ready for chipher block
 			mm_dir_chipher    => mm_dir_chipher,
 			mm_dor_chipher    => mm_dor_chipher,
+			mm_div_chipher    => mm_div_chipher,
+			mm_dov_chipher    => mm_dov_chipher,
 
 			-- Exponentiation data
 			exponent_lsb	  => exponent_lsb,
@@ -151,10 +159,14 @@ begin
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
 			mm_dor_partial    => mm_dor_partial,
+			mm_div_partial    => mm_div_partial,
+			mm_dov_partial    => mm_dov_partial,
 			
 			-- MultiMod Data in/out ready for chipher block
 			mm_dir_chipher    => mm_dir_chipher,
 			mm_dor_chipher    => mm_dor_chipher,
+			mm_div_chipher    => mm_div_chipher,
+			mm_dov_chipher    => mm_dov_chipher,
 
 			-- Exponentiation data
 			exponent_lsb	  => exponent_lsb,
