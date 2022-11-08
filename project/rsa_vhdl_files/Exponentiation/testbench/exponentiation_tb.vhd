@@ -84,6 +84,8 @@ begin
 	-- Stimuli generation
 	stimuli_proc: process
 	begin
+	   ready_out <= '0';
+
 	  	-- Send in first test vector
 		wait for 10*CLK_PERIOD;
 		message   <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
@@ -94,6 +96,25 @@ begin
         wait until ready_in = '1';
         wait until valid_out = '1';
         ready_out <= '1';
+		wait for CLK_PERIOD;
+		ready_out <= '0';
+
+
+		
+		
+		-- Send in first test vector
+		wait for 10*CLK_PERIOD;
+		message   <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
+        key       <= std_logic_vector(to_unsigned( 16#5#, C_block_size));
+        modulus   <= x"FFFFFFFFFFFFFF89"; --2s complement of 0x77
+        valid_in  <= '1';
+        
+        wait until ready_in = '1';
+        wait until valid_out = '1';
+        ready_out <= '1';
+		
+		
+		
 		
 		assert false report "Test done." severity note;
     	wait;
