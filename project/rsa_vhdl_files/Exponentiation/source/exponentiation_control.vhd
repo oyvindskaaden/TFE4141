@@ -151,6 +151,8 @@ begin
                 
                 if (mm_dor_partial = '1' and mm_dor_chipher = '1') then
                     next_state <= RUNNING;
+                    partial_reg_load  <= '1';
+                    chipher_reg_load  <= '1';
                 else
                     next_state <= MULTIMOD;
                 end if;
