@@ -77,9 +77,14 @@ architecture Behavioral of multi_mod_datapath is
     signal partial_mod_1n   : std_logic_vector(C_block_size-1 downto 0);
     signal partial_mod_2n   : std_logic_vector(C_block_size-1 downto 0);
     
+    signal M_mux_out        : std_logic_vector(C_block_size-1 downto 0);
+
+    
 begin
     
     B_msb <= B_r(C_block_size-1);
+    
+    M_out <= M_r;
 
     --A Register
     process(clk, reset_n, A_in) begin
@@ -124,7 +129,7 @@ begin
             M_r <= (others => '0');
         elsif(clk'event and clk='1') then
             if(M_reg_load='1') then
-                M_r <= M_out;
+                M_r <= M_mux_out;
             end if;
         end if;
 
@@ -180,13 +185,13 @@ begin
     process(clk) begin
         case mod_sel is
             when b"00" =>
-                M_out <= partial_sum;
+                M_mux_out <= partial_sum;
             when b"01" =>
-                M_out <= partial_mod_1n;
+                M_mux_out <= partial_mod_1n;
             when b"10" =>
-                M_out <= partial_mod_2n;
+                M_mux_out <= partial_mod_2n;
             when others =>
-                M_out <= (others => '0');
+                M_mux_out <= (others => '0');
         end case;
     end process;
 

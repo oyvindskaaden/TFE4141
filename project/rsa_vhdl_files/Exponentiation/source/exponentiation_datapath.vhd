@@ -61,12 +61,20 @@ entity exponentiation_datapath is
 		exponent_reg_load : in std_logic;
 
         -- MultiMod Data in/out ready for partial block
-        mm_dir_partial    : in  std_logic;
-        mm_dor_partial    : out std_logic;
+        mm_div_partial    : in  std_logic;
+        mm_dir_partial    : out std_logic;
+
+        mm_dov_partial    : out std_logic;
+        mm_dor_partial    : in  std_logic;
+
         
-        -- MultiMod Data in/out ready for chipher block
-        mm_dir_chipher    : in  std_logic;
-        mm_dor_chipher    : out std_logic;
+        -- MultiMod Data in/out ready for chipher block		
+		mm_div_chipher: in  std_logic;
+        mm_dir_chipher: out std_logic;
+               
+        mm_dov_chipher: out std_logic;
+        mm_dor_chipher: in  std_logic;
+		
 		
 		-- Exponentiation values
 		exponent_lsb      : out std_logic;
@@ -100,7 +108,9 @@ begin
     
             -- MultiMod (mm) data ready signals
             mm_data_in_ready    => mm_dir_partial,
-            mm_data_out_ready   => mm_dor_partial
+            mm_data_out_ready   => mm_dor_partial,
+            mm_data_in_valid    => mm_div_partial,
+            mm_data_out_valid   => mm_dov_partial
         );
         
     u_multi_mod_chipher: entity work.multi_mod
@@ -120,7 +130,9 @@ begin
     
             -- MultiMod (mm) data ready signals
             mm_data_in_ready    => mm_dir_chipher,
-            mm_data_out_ready   => mm_dor_chipher
+            mm_data_out_ready   => mm_dor_chipher,
+            mm_data_in_valid    => mm_div_chipher,
+            mm_data_out_valid   => mm_dov_chipher
         );
        
     result <= chipher_out;
@@ -164,7 +176,7 @@ begin
         if (reset_n = '0') then
             exponent_reg    <= (others => '0');
             
-        elsif (clk'event and clk = '1' and exponent_reg_sel = '1') then
+        elsif (clk'event and clk = '1' and exponent_reg_load = '1') then
             if (exponent_reg_sel = '1') then
                 exponent_reg    <= '0' & exponent_reg(C_block_size-1 downto 1);
             else

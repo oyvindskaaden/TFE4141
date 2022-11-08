@@ -52,8 +52,15 @@ architecture Behavioral of multi_mod_tb is
     signal M_out               : std_logic_vector(C_block_size-1 downto 0);
      
      -- MultiMod (mm) data signals
-    signal mm_data_in_ready    : std_logic := '0';
-    signal mm_data_out_ready   : std_logic;
+    --signal mm_data_in_ready    : std_logic := '0';
+    --signal mm_data_out_ready   : std_logic;
+    
+     -- MultiMod (mm) data ready signals
+    signal mm_data_in_valid    : std_logic := '0';
+    signal mm_data_in_ready    : std_logic;
+
+    signal mm_data_out_valid   : std_logic;
+    signal mm_data_out_ready   : std_logic := '0';
     
 begin
     clk <= not clk after CLK_PERIOD/2;
@@ -83,6 +90,9 @@ begin
                         
             
             -- Data readiness
+            
+            mm_data_in_valid    => mm_data_in_valid,
+            mm_data_out_valid   => mm_data_out_valid,
             mm_data_in_ready    => mm_data_in_ready,
             mm_data_out_ready   => mm_data_out_ready
             
@@ -94,10 +104,35 @@ begin
 	    wait for 10*CLK_PERIOD;
 
 	   --TESTS
+    	A_in <= x"0048656c6c6f2121";
+    	B_in <= x"0048656c6c6f2121";
+    	N_in <= x"F7182CECE46FFAD7"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
+    	mm_data_in_valid <= '1';
+    	wait until mm_data_in_ready = '1';
+    	mm_data_in_valid <= '0';
+    	--OUT = 13
+    	--wait for 70*CLK_PERIOD;
+    	wait until mm_data_out_valid = '1';
+    	
+    	
+    	assert M_out = x"0075b1cb9040e4fa";
+    	wait for 10*CLK_PERIOD;
+
+    	
+    	mm_data_out_ready <= '1';
+    	wait for CLK_PERIOD;
+    	mm_data_out_ready <= '0';
+
+    	--MORE TESTS
+    	
+	   
+	   wait for 70*CLK_PERIOD;
+
+	   --TESTS
     	A_in <= x"07659b124f9afa93";
     	B_in <= x"08849308493143dd";
     	N_in <= x"F58A967DBC6A7053"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	mm_data_in_ready <= '1';
+    	mm_data_in_valid <= '1';
     	
     	--OUT = 13
     	--wait for 70*CLK_PERIOD;
@@ -105,11 +140,12 @@ begin
     	
     	
     	assert M_out = x"4f02674256cb793";
-    	mm_data_in_ready <= '0';
+    	mm_data_in_valid <= '0';
     	wait for CLK_PERIOD;
 
     	--MORE TESTS
     	
+	   
 	   
 	   
 	   
@@ -118,26 +154,26 @@ begin
     	A_in <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
     	B_in <= std_logic_vector(to_unsigned( 16#10#, C_block_size));
     	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	mm_data_in_ready <= '1';
+    	mm_data_in_valid <= '1';
     	
     	--OUT = 42
     	wait until mm_data_out_ready = '1';
     	assert M_out = std_logic_vector(to_unsigned( 16#42#, C_block_size));
     	wait for CLK_PERIOD;
-    	mm_data_in_ready <= '0';
+    	mm_data_in_valid <= '0';
     	wait for CLK_PERIOD;
     	
     	--TESTS
     	A_in <= std_logic_vector(to_unsigned( 16#1#, C_block_size));
     	B_in <= std_logic_vector(to_unsigned( 16#42#, C_block_size));
     	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	mm_data_in_ready <= '1';
+    	mm_data_in_valid <= '1';
     	
     	--OUT = 42
     	wait until mm_data_out_ready = '1';
     	assert M_out = std_logic_vector(to_unsigned( 16#42#, C_block_size));
     	wait for CLK_PERIOD;
-    	mm_data_in_ready <= '0';
+    	mm_data_in_valid <= '0';
     	wait for CLK_PERIOD;
 
     	--MORE TESTS
@@ -146,26 +182,26 @@ begin
     	A_in <= std_logic_vector(to_unsigned( 16#42#, C_block_size));
     	B_in <= std_logic_vector(to_unsigned( 16#43#, C_block_size));
     	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	mm_data_in_ready <= '1';
+    	mm_data_in_valid <= '1';
     	
     	--OUT = 13
     	wait until mm_data_out_ready = '1';
     	assert M_out = std_logic_vector(to_unsigned( 16#13#, C_block_size));
     	wait for CLK_PERIOD;
-    	mm_data_in_ready <= '0';
+    	mm_data_in_valid <= '0';
     	wait for CLK_PERIOD;
     	
     	--TESTS
     	A_in <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
     	B_in <= std_logic_vector(to_unsigned( 16#56#, C_block_size));
     	N_in <= x"FFFFFFFFFFFFFF89"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	mm_data_in_ready <= '1';
+    	mm_data_in_valid <= '1';
     	
     	--OUT = 13
     	wait until mm_data_out_ready = '1';
     	assert M_out = std_logic_vector(to_unsigned( 16#13#, C_block_size));
     	wait for CLK_PERIOD;
-    	mm_data_in_ready <= '0';
+    	mm_data_in_valid <= '0';
     	wait for CLK_PERIOD;
 
     	--MORE TESTS

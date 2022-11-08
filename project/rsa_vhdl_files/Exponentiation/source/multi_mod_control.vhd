@@ -39,8 +39,14 @@ entity multi_mod_control is
 	);
     Port (
     
-        mm_data_in_ready    : in std_logic;     
-        mm_data_out_ready   : out std_logic;     
+        --mm_data_in_ready    : in std_logic;     
+        --mm_data_out_ready   : out std_logic;    
+        
+        mm_data_in_valid    : in    std_logic;
+        mm_data_in_ready    : out   std_logic;
+
+        mm_data_out_valid   : out   std_logic;
+        mm_data_out_ready   : in    std_logic; 
 
         -- Datapath control logic
         A_reg_load  : out std_logic;
@@ -77,6 +83,8 @@ architecture Behavioral of multi_mod_control is
 begin
 
     borrow <= (borrow_1n & borrow_2n);
+    
+
 
     counter : entity work.counter 
     generic map (
@@ -88,7 +96,7 @@ begin
       y             => cnt_out);
 
 
-    fsmComb : process(curr_state, clk) begin
+    fsmComb : process(curr_state, mm_data_in_valid, cnt_out, mm_data_out_ready) begin
         case (curr_state) is
         when IDLE =>
             mm_reset_n <= '0';
@@ -103,9 +111,10 @@ begin
             
             B_reg_sel <= '0';
             
-            mm_data_out_ready <= '0';
+            mm_data_out_valid <= '0';
+            mm_data_in_ready <= '0';
             
-            if(mm_data_in_ready = '1') then
+            if(mm_data_in_valid = '1') then
                 next_state <= SETUP;
             else
                 next_state <= IDLE;
@@ -126,13 +135,15 @@ begin
             
             B_reg_sel <= '0';
             
-            mm_data_out_ready <= '0';
+            mm_data_out_valid <= '0';
+            mm_data_in_ready <= '1';
 
-            if(mm_data_in_ready = '1') then
-                next_state <= RUNNING;
-            else
-                next_state <= IDLE;
-            end if;
+            next_state <= RUNNING;
+            --if(mm_data_in_valid = '1') then
+            --    next_state <= RUNNING;
+            --else
+            --    next_state <= IDLE;
+            --end if;
            
            
             
@@ -149,20 +160,19 @@ begin
             
             B_reg_sel <= '1';
             
-            mm_data_out_ready <= '0';
+            mm_data_out_valid <= '0';
+            mm_data_in_ready <= '0';
             
          
-            if(mm_data_in_ready = '0') then
-                next_state <= IDLE;
-            elsif (cnt_out = C_block_size) then
+            --if(mm_data_in_ready = '0') then
+            --    next_state <= IDLE;
+            --els
+            if (cnt_out = C_block_size) then
                 next_state <= DONE;
             else
                 next_state <= RUNNING;
             end if;
             
-            if(reset_n = '0') then
-                next_state <= IDLE;
-            end if;
             
         when DONE =>
             mm_reset_n <= '1';
@@ -172,15 +182,19 @@ begin
             
             A_reg_load <= '0';
             N_reg_load <= '0';
-            B_reg_load <= '1';
-            M_reg_load <= '1';
+            B_reg_load <= '0';
+            M_reg_load <= '0';
             
             B_reg_sel <= '1';
             
             
-            mm_data_out_ready <= '1';
+            mm_data_out_valid <= '1';
             
-            next_state <= IDLE;
+            if (mm_data_out_ready = '1') then
+                next_state <= IDLE;
+            else
+                next_state <= DONE;
+            end if;
         end case;
         
     end process fsmComb;
