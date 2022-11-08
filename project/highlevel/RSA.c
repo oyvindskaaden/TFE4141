@@ -104,9 +104,10 @@ void _test_ModMulti(mod_multi_t *test)
 int main(int argc, char const *argv[])
 {
     uint64_t message    = 19;
-    uint64_t pub_key    = 5;
-    uint64_t n          = 119;
-    uint64_t priv_key   = 77;
+    uint64_t pub_key    = 0x10001;//5;
+    uint64_t priv_key   = 0x4131e2e765e8901;//77;
+    uint64_t n          = 0x8e7d3131b900529;//119;
+
 
     printf("message: %x, pub_key: %x, n: %x, priv_key: %x\n", message, pub_key, n, priv_key);
 
