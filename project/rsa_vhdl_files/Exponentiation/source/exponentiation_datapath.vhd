@@ -132,11 +132,11 @@ begin
             
         elsif (clk'event and clk = '1' and partial_reg_load = '1') then
             -- This is also probably wrong
-            if (partial_reg_sel = '0') then
+            if (partial_reg_sel = '1') then
                 -- Set partial to message (data)
-                partial_reg     <= message;
-            elsif (partial_reg_sel = '1') then
                 partial_reg     <= partial_out;
+            else
+                partial_reg     <= message;
             end if;
         end if;
     end process;
@@ -149,11 +149,11 @@ begin
         elsif (clk'event and clk = '1' and chipher_reg_load = '1') then
             -- This is also probably wrong
             
-            if (chipher_reg_sel = '0') then
+            if (chipher_reg_sel = '1') then
                 -- Set partial to message (data)
-                chipher_reg     <= std_logic_vector(to_unsigned(1, C_block_size));
-            elsif (chipher_reg_sel = '1') then
                 chipher_reg     <= chipher_out;
+            else
+                chipher_reg     <= std_logic_vector(to_unsigned(1, C_block_size));
             end if;           
         end if;
     end process;
@@ -165,10 +165,10 @@ begin
             exponent_reg    <= (others => '0');
             
         elsif (clk'event and clk = '1' and exponent_reg_sel = '1') then
-            if (exponent_reg_sel = '0') then
-                exponent_reg    <= key;
-            elsif (exponent_reg_sel = '1') then
+            if (exponent_reg_sel = '1') then
                 exponent_reg    <= '0' & exponent_reg(C_block_size-1 downto 1);
+            else
+                exponent_reg    <= key;
             end if;
         end if;
     end process;

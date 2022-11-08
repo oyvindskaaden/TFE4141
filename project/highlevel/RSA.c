@@ -5,6 +5,17 @@
 
 #define MASK    (1L << 63)      // Mask to get the MSBit
 
+typedef struct ModMultiTest
+{
+    uint64_t    A;
+    uint64_t    B;
+    uint64_t    N;
+    uint64_t    expected;
+    char*       test_name;
+    bool        correct;
+} mod_multi_t;
+
+
 /**
  * Calculates the modular multiplication using the blakley method
  * 
@@ -60,7 +71,7 @@ uint64_t RSA(
         if (exponent & 1) {
             printf("chipher = ModMulti(%lx, %lx, %lx)\n",chipher,partial,n);
             chipher = ModMulti(chipher, partial, n);
-            printf("chipher = %lx \n",chipher);
+            printf("chipher = %lx \n\n",chipher);
         }
             
         
@@ -68,6 +79,25 @@ uint64_t RSA(
         exponent >>= 1;
     }
     return chipher;
+}
+
+void _test_ModMulti(mod_multi_t *test)
+{
+    printf("\nTest: %s\n", test->test_name);
+    printf("====================\n");
+    printf("A:\t\t0x%016lx\nB:\t\t0x%016lx\nN:\t\t0x%016lx\n", test->A, test->B, test->N);
+    printf("Expected:\t0x%016lx\n", test->expected);
+    uint64_t result     = ModMulti(test->A, test->B, test->N);
+    printf("Result:\t\t0x%016lx\n", result);
+    
+    if (result != test->expected) {
+        printf("ModMulti NOT equal to expected!\n\n");
+        test->correct = false;
+        return;
+    }
+    printf("ModMulti equal to expected!\n\n");
+    test->correct = true;
+    return;
 }
 
 
@@ -88,14 +118,16 @@ int main(int argc, char const *argv[])
     printf("Decrypted message are: \t%lu\n", decrypted);
 
 
-    uint64_t    A       = 0x7659B124F9AFA93,
-                B       = 0x8849308493143DD,
-                N       = 0xA75698243958FAD;
+    mod_multi_t large_test = (mod_multi_t){
+        .A          = 0x7659B124F9AFA93,
+        .B          = 0x8849308493143DD,
+        .N          = 0xA75698243958FAD,
+        .expected   = 0x4f02674256cb793,
+        .test_name  = "Large numbers",
+        .correct    = false
+    };
 
-    printf("A:\t0x%016lx\nB:\t0x%016lx\nN:\t0x%016lx\n", A, B, N);
-
-    uint64_t    res     = ModMulti(A, B, N);
-    printf("Result: 0x%016lx\n", res);
+    _test_ModMulti(&large_test);
 
     return 0;
 }
