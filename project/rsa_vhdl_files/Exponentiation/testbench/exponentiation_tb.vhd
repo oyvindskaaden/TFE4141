@@ -88,9 +88,10 @@ begin
 
 	  	-- Send in first test vector
 		wait for 10*CLK_PERIOD;
-		message   <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
-        key       <= std_logic_vector(to_unsigned( 16#5#, C_block_size));
-        modulus   <= x"FFFFFFFFFFFFFF89"; --2s complement of 0x77
+		message   <= x"0048656C6C6F2121";
+        key       <= x"0000000000010001";-- std_logic_vector(to_unsigned( 16#10001#, C_block_size));
+        modulus   <= x"F7182CECE46FFAD7"; --2s complement of 08e7d3131b900529
+        wait for CLK_PERIOD;
         valid_in  <= '1';
         
         wait until ready_in = '1';
@@ -103,7 +104,7 @@ begin
 		
 		
 		-- Send in first test vector
-		wait for 10*CLK_PERIOD;
+		wait for 100000*CLK_PERIOD;
 		message   <= std_logic_vector(to_unsigned( 16#13#, C_block_size));
         key       <= std_logic_vector(to_unsigned( 16#5#, C_block_size));
         modulus   <= x"FFFFFFFFFFFFFF89"; --2s complement of 0x77

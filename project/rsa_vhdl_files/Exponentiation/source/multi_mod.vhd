@@ -46,8 +46,12 @@ entity multi_mod is
         M_out               : out   std_logic_vector(C_block_size-1 downto 0);
     
         -- MultiMod (mm) data ready signals
-        mm_data_in_ready    : in    std_logic;
-        mm_data_out_ready   : out   std_logic
+        mm_data_in_valid    : in    std_logic;
+        mm_data_in_ready    : out   std_logic;
+
+        mm_data_out_valid   : out   std_logic;
+        mm_data_out_ready   : in    std_logic
+
     );
 end multi_mod;
 
@@ -79,6 +83,8 @@ begin
 
             
             -- Data readiness
+            mm_data_in_valid    => mm_data_in_valid,
+            mm_data_out_valid   => mm_data_out_valid,
             mm_data_in_ready    => mm_data_in_ready,
             mm_data_out_ready   => mm_data_out_ready,
             
