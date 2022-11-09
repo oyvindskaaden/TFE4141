@@ -74,7 +74,8 @@ entity exponentiation_control is
         mm_dov_chipher: in std_logic;
         mm_dor_chipher: out  std_logic;
         
-        
+        mm_reset_n: out std_logic;
+
         
         
         
@@ -90,7 +91,8 @@ architecture Behavioral of exponentiation_control is
     signal curr_state, next_state   : state;
 begin
 
-    expFSM: process (curr_state, valid_in, exponent_lsb, exponent_is_0, mm_dor_partial, mm_dor_chipher, ready_out) begin
+    --expFSM: process (curr_state, valid_in, exponent_lsb, exponent_is_0, mm_dor_partial, mm_dor_chipher, ready_out) begin
+    expFSM: process (all) begin
         case (curr_state) is
             when IDLE       =>
                 partial_reg_sel   <= '0';
@@ -109,6 +111,8 @@ begin
                 
                 mm_dor_partial <= '0';
                 mm_dor_chipher <= '0';
+                
+                mm_reset_n <= '0';
 
                 
                 if (valid_in = '1') then
@@ -130,7 +134,11 @@ begin
                 mm_div_partial <= '1';
                 mm_div_chipher <= '1';
                 
+                mm_reset_n <= '0';
+
+                
                 next_state <= MULTIMOD_SETUP;
+            
             when MULTIMOD_SETUP =>
                 mm_div_partial <= '1';
                 mm_div_chipher <= '1';
@@ -144,8 +152,15 @@ begin
                 chipher_reg_load  <= '0';
                 exponent_reg_load <= '0';
                 
+                mm_dor_partial <= '0';
+                mm_dor_chipher <= '0';
+                
+                
                 ready_in <= '0';
                 valid_out <= '0';
+                
+                mm_reset_n <= '1';
+
                 
                 if (mm_dir_partial = '1' and mm_dir_chipher = '1') then
                     next_state <= MULTIMOD;
@@ -153,6 +168,35 @@ begin
                     next_state <= MULTIMOD_SETUP;
                 end if;
                 
+            when MULTIMOD   => 
+                partial_reg_sel   <= '1';
+                chipher_reg_sel   <= '1';
+                exponent_reg_sel  <= '1';
+
+                partial_reg_load  <= '0';
+                chipher_reg_load  <= '0';
+                exponent_reg_load <= '0';
+                
+                mm_div_partial <= '0';
+                mm_div_chipher <= '0';
+                
+                mm_dor_partial <= '0';
+                mm_dor_chipher <= '0';
+                
+                
+                mm_reset_n <= '1';
+                
+                ready_in <= '0';
+                valid_out <= '0';
+                
+                if ((mm_dov_partial = '1') and (mm_dov_chipher = '1')) then
+                    next_state <= RUNNING;
+                    --partial_reg_load  <= '1';
+                    --chipher_reg_load  <= '1';
+                else
+                    next_state <= MULTIMOD;
+                end if;
+            
             
             when RUNNING    =>
                 partial_reg_sel   <= '1';
@@ -160,7 +204,7 @@ begin
                 exponent_reg_sel  <= '1';
 
                 partial_reg_load  <= '1';
-                chipher_reg_load  <= '1';
+                --chipher_reg_load  <= '1';
                 exponent_reg_load <= '1';
                 
                 ready_in <= '0';
@@ -168,6 +212,11 @@ begin
                 
                 mm_div_partial <= '0';
                 mm_div_chipher <= '0';
+                
+                mm_dor_partial <= '1';
+                mm_dor_chipher <= '1';
+                
+                --mm_reset_n <= '0';
                 
                 if(exponent_lsb = '1') then
                     chipher_reg_load  <= '1';
@@ -181,28 +230,6 @@ begin
                     next_state <= MULTIMOD_SETUP;
                 end if;
                             
-            when MULTIMOD   => 
-                partial_reg_sel   <= '1';
-                chipher_reg_sel   <= '1';
-                exponent_reg_sel  <= '1';
-
-                partial_reg_load  <= '0';
-                chipher_reg_load  <= '0';
-                exponent_reg_load <= '0';
-                
-                mm_div_partial <= '0';
-                mm_div_chipher <= '0';
-                
-                ready_in <= '0';
-                valid_out <= '0';
-                
-                if (mm_dov_partial = '1' and mm_dov_chipher = '1') then
-                    next_state <= RUNNING;
-                    partial_reg_load  <= '1';
-                    chipher_reg_load  <= '1';
-                else
-                    next_state <= MULTIMOD;
-                end if;
             
 
             when DONE       =>
@@ -220,6 +247,8 @@ begin
                 
                 mm_div_partial <= '0';
                 mm_div_chipher <= '0';
+                
+                mm_reset_n <= '0';
             
                 if(ready_out = '1') then
                     next_state <= IDLE;

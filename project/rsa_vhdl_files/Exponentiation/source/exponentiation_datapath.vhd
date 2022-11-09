@@ -74,6 +74,8 @@ entity exponentiation_datapath is
                
         mm_dov_chipher: out std_logic;
         mm_dor_chipher: in  std_logic;
+        
+        mm_reset_n:     in  std_logic;
 		
 		
 		-- Exponentiation values
@@ -97,7 +99,7 @@ begin
         )
         port map (
             clk                 => clk,
-            reset_n             => reset_n,
+            reset_n             => mm_reset_n,
     
             A_in                => partial_reg,
             B_in                => partial_reg,
@@ -119,7 +121,7 @@ begin
         )
         port map (
             clk                 => clk,
-            reset_n             => reset_n,
+            reset_n             => mm_reset_n,
     
             A_in                => partial_reg,
             B_in                => chipher_reg,
@@ -135,7 +137,7 @@ begin
             mm_data_out_valid   => mm_dov_chipher
         );
        
-    result <= chipher_out;
+    result <= chipher_reg;
     
     -- Partial reg
     process (clk, reset_n) begin

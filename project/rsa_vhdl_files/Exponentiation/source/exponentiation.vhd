@@ -91,6 +91,9 @@ architecture expBehave of exponentiation is
     signal partial_reg_load  : std_logic;
     signal chipher_reg_load  : std_logic;
     signal exponent_reg_load : std_logic;
+    
+    signal mm_reset_n        : std_logic;
+
 
 begin
 
@@ -163,24 +166,26 @@ begin
 			mm_dov_partial    => mm_dov_partial,
 			
 			-- MultiMod Data in/out ready for chipher block
-			mm_dir_chipher    => mm_dir_chipher,
-			mm_dor_chipher    => mm_dor_chipher,
-			mm_div_chipher    => mm_div_chipher,
-			mm_dov_chipher    => mm_dov_chipher,
+			mm_dir_chipher       => mm_dir_chipher,
+			mm_dor_chipher       => mm_dor_chipher,
+			mm_div_chipher       => mm_div_chipher,
+			mm_dov_chipher       => mm_dov_chipher,
+			
+			mm_reset_n           => mm_reset_n,
 
-			-- Exponentiation data
-			exponent_lsb	  => exponent_lsb,
-			exponent_is_0	  => exponent_is_0,		
+			-- Exponentiation    data
+			exponent_lsb	     => exponent_lsb,
+			exponent_is_0	     => exponent_is_0,		
 			
 			-- Reg control
-            partial_reg_sel   => partial_reg_sel,
-            chipher_reg_sel   => chipher_reg_sel,
-            exponent_reg_sel  => exponent_reg_sel,
+            partial_reg_sel      => partial_reg_sel,
+            chipher_reg_sel      => chipher_reg_sel,
+            exponent_reg_sel     => exponent_reg_sel,
 
-            -- Reg Load Contro 
-            partial_reg_load  => partial_reg_load,
-            chipher_reg_load  => chipher_reg_load,
-            exponent_reg_load => exponent_reg_load
+            -- Reg Load Contro    
+            partial_reg_load     => partial_reg_load,
+            chipher_reg_load     => chipher_reg_load,
+            exponent_reg_load    => exponent_reg_load
 
 	   );
 
