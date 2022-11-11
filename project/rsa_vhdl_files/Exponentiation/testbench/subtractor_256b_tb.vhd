@@ -73,6 +73,9 @@ stimulus: process is
     	A <= x"F" ; B_2s <= x"F" ; --F -1= +E(E)
     	wait for 10 ns ;
     	A <= x"1" ; B_2s <= x"1" ; --1 -F= -E(2)
+		wait for 10 ns ;
+		A 		<= x"0a23232323232323232323232323232323232323232323232323232323232323"
+		B_2s	<= x"666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973"
         
         assert false report "Test done." severity note;
     	wait;
