@@ -109,7 +109,7 @@ begin
     	A_in <= x"0a23232323232323232323232323232323232323232323232323232323232323";
     	B_in <= x"0a23232323232323232323232323232323232323232323232323232323232323";
     	N_in <= x"666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973"; --std_logic_vector(to_unsigned( 16#FFFFFFFFFFFFFF89#, C_block_size)); 
-    	expected <= x"7090d1af75bdbabc0deac47b2255fb11209a26b279668a45d6924cac2a23ac96";
+    	expected <= x"24931802b9ead447563ec7f0f3d613270a5dd5f3d3df1457b9857de14da1a750";
 		mm_data_in_valid <= '1';
     	wait until mm_data_in_ready = '1';
     	mm_data_in_valid <= '0';
