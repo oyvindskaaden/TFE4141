@@ -54,11 +54,13 @@ architecture Behavioral of subtractor_256b is
 begin
     process(A, B_2s) begin
         tmpA <=  '0' & A;  
-        tmpB <=  '1' & B_2s;   
+        --tmpB <=  '1' & B_2s; 
+        tmpB <=  '0' & B_2s;  
     end process;
     
     process(tmpA,tmpB) begin
-        tempRes <= tmpA + tmpB;
+        --tempRes <= tmpA + tmpB;
+        tempRes <= tmpA - tmpB;
         --tempRes <= std_logic_vector(('0' & '0' & unsigned(A)) + ('1' & '1' & unsigned(B)));
         
     end process;
