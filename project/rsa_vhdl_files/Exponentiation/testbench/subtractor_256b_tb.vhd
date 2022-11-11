@@ -55,27 +55,27 @@ begin
         
 stimulus: process is
 	begin
-    	wait for 10 ns ;
-    	A <= x"7" ; B_2s <= x"1" ; --7-F = -8(8)
+--    	wait for 10 ns ;
+--    	A <= x"7" ; B_2s <= x"1" ; --7-F = -8(8)
+--		wait for 10 ns ;
+--    	A <= x"8" ; B_2s <= x"2" ; --8-E=-6(a)
+--		wait for 10 ns ;
+--    	A <= x"2" ; B_2s <= x"3" ; --2-D=-B(5)
+--		wait for 10 ns ;
+--    	A <= x"8" ; B_2s <= x"E" ; --8-2=+6(6)
+--		wait for 10 ns ;
+--    	A <= x"B" ; B_2s <= x"7" ; --B -9=+2(2)
+--    	wait for 10 ns ;
+--    	A <= x"F" ; B_2s <= x"2" ; --F -E= +1
+--    	wait for 10 ns ;
+--    	A <= x"E" ; B_2s <= x"1" ; --E -F= -1(F)
+--    	wait for 10 ns ;
+--    	A <= x"F" ; B_2s <= x"F" ; --F -1= +E(E)
+--    	wait for 10 ns ;
+--    	A <= x"1" ; B_2s <= x"1" ; --1 -F= -E(2)
 		wait for 10 ns ;
-    	A <= x"8" ; B_2s <= x"2" ; --8-E=-6(a)
-		wait for 10 ns ;
-    	A <= x"2" ; B_2s <= x"3" ; --2-D=-B(5)
-		wait for 10 ns ;
-    	A <= x"8" ; B_2s <= x"E" ; --8-2=+6(6)
-		wait for 10 ns ;
-    	A <= x"B" ; B_2s <= x"7" ; --B -9=+2(2)
-    	wait for 10 ns ;
-    	A <= x"F" ; B_2s <= x"2" ; --F -E= +1
-    	wait for 10 ns ;
-    	A <= x"E" ; B_2s <= x"1" ; --E -F= -1(F)
-    	wait for 10 ns ;
-    	A <= x"F" ; B_2s <= x"F" ; --F -1= +E(E)
-    	wait for 10 ns ;
-    	A <= x"1" ; B_2s <= x"1" ; --1 -F= -E(2)
-		wait for 10 ns ;
-		A 		<= x"0a23232323232323232323232323232323232323232323232323232323232323"
-		B_2s	<= x"666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973"
+		A 		<= x"0a23232323232323232323232323232323232323232323232323232323232323";
+		B_2s	<= x"666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973";
         -- Expected 0x7090d1af75bdbabc0deac47b2255fb11209a26b279668a45d6924cac2a23ac96
         assert false report "Test done." severity note;
     	wait;
