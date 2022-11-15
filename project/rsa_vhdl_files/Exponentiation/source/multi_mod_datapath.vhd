@@ -73,7 +73,7 @@ architecture Behavioral of multi_mod_datapath is
 
     --signal a_reg_sel : std_logic;
 
-    signal partial_sum      : std_logic_vector(C_block_size-1 downto 0);
+    signal partial_sum      : std_logic_vector(C_block_size downto 0);
     signal partial_mod_1n   : std_logic_vector(C_block_size-1 downto 0);
     signal partial_mod_2n   : std_logic_vector(C_block_size-1 downto 0);
     
@@ -149,7 +149,7 @@ begin
     end process;
     
     process(A_mux, M_r) begin
-        partial_sum <= (M_r(C_block_size-2 downto 0) & '0') + A_mux;
+        partial_sum <= (M_r(C_block_size-1 downto 0) & '0') + ('0' & A_mux);
 
     end process;
     
@@ -165,7 +165,7 @@ begin
         )
         port map(
             A => partial_sum , 
-            B_2s => N_r , 
+            B_2s => ('1' & N_r) , 
             result => partial_mod_1n , 
             borrow =>borrow_1n
         );
@@ -176,7 +176,7 @@ begin
         )
         port map(
             A => partial_sum , 
-            B_2s => (N_r(C_block_size-2 downto 0) & '0') , 
+            B_2s => (N_r & '0') , 
             result => partial_mod_2n , 
             borrow =>borrow_2n 
         );
@@ -185,11 +185,11 @@ begin
     process(clk) begin
         case mod_sel is
             when b"00" =>
-                M_mux_out <= partial_sum;
+                M_mux_out <= partial_sum(C_block_size-1 downto 0);
             when b"01" =>
-                M_mux_out <= partial_mod_1n;
+                M_mux_out <= partial_mod_1n(C_block_size-1 downto 0);
             when b"10" =>
-                M_mux_out <= partial_mod_2n;
+                M_mux_out <= partial_mod_2n(C_block_size-1 downto 0);
             when others =>
                 M_mux_out <= (others => '0');
         end case;
