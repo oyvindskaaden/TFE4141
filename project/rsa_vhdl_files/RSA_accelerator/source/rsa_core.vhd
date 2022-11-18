@@ -108,7 +108,7 @@ begin
 					msgout_last 	<= '0';
 				end if;
 		end case;
-	end process;
+	end process msgFSM;
 
 	msgfsmSync : process(reset_n, clk) 
     begin
@@ -117,11 +117,7 @@ begin
         elsif rising_edge(clk) then
             curr_msgstate <= next_msgstate;
         end if;
-    end process fsmSync;
-		
-
-	msglast  	<= msgin_last and ready_in;
-	msgout_last	<= msglast and valid_out;
+    end process msgfsmSync;
 
 	rsa_status   <= (others => '0');
 end rtl;
