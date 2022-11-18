@@ -19,10 +19,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+
+
 entity rsa_core is
 	generic (
 		-- Users to add parameters here
-		C_BLOCK_SIZE          : integer := 256
+		C_BLOCK_SIZE          : integer := 256;
+		NO_CORES              : integer := 4
 	);
 	port (
 		-----------------------------------------------------------------------------
@@ -67,6 +71,15 @@ end rsa_core;
 
 architecture rtl of rsa_core is
 	--signal msglast	: std_logic;
+	
+	type msg_out_array_t is array (NO_CORES - 1 downto 0) of std_logic_vector(C_BLOCK_SIZE - 1 downto 0);
+	signal msg_out_array       : msg_out_array_t;
+	
+	signal core_busy           : std_logic_vector(NO_CORES - 1 downto 0);
+	signal core_last_msg       : std_logic_vector(NO_CORES - 1 downto 0);
+	signal core_out_valid      : std_logic_vector(NO_CORES - 1 downto 0);
+	signal core_out_ready      : std_logic_vector(NO_CORES - 1 downto 0);
+	signal core_in_ready       : std_logic_vector(NO_CORES - 1 downto 0);
 
 	type state is (NOT_LAST, LAST, HOLD);
 	signal current_msgstate, next_msgstate : state;
@@ -87,6 +100,25 @@ begin
 			clk       => clk         ,
 			reset_n   => reset_n
 		);
+		
+	expGen: for I in 0 to NO_CORES - 1 generate
+	    i_exp: entity work.exponentiation
+            generic map (
+			    C_block_size => C_BLOCK_SIZE
+		    )
+		    port map (
+                message   => msgin_data  ,
+                key       => key_e_d     ,
+                valid_in  => msgin_valid ,
+                ready_in  => core_in_ready(I),
+                ready_out => core_out_ready(I),
+                valid_out => core_out_valid(I),
+                result    => msg_out_array(I),
+                modulus   => key_n       ,
+                clk       => clk         ,
+                reset_n   => reset_n
+		   );
+	end generate expGen;
 
 	msgFSM: process (all) begin
 		case (current_msgstate) is
