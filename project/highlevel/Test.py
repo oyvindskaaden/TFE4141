@@ -8,55 +8,87 @@ B   = 0x0a23232323232323232323232323232323232323232323232323232323232323
 N   = 0x99925173ad65686715385ea800cd28120288fc70a9bc98dd4c90d676f8ff768d
 #N   = 0x666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973
 
+def hex2(n, bits):
+    return "0x%x"%(n & ((1<<bits) - 1))
+
+def MultiMod(A, B, N):
+    M               = 0
+    partial         = 0
+    partial_mod_1n  = 0
+    partial_mod_2n  = 0
+
+    times = 256
+    mask = 1 << times - 1
+
+    while (times):
+        print("==== Round:", 256 - times)
+        print("M before algo:   ", hex2(M, 260))
+        partial = (M << 1) + (A if B & mask else 0)
+
+        B = B << 1
+
+        
+        partial_mod_1n = partial - N
+        partial_mod_2n = partial - (N << 1)
+
+        print("Partial:         ", hex2(partial, 260))
+        print("Partial mod n:   ", hex2(partial_mod_1n, 260))
+        print("Partial mod 2n:  ", hex2(partial_mod_2n, 260))
+
+        mux_sel = 0
+        
+        if partial_mod_1n < 0:
+            mux_sel += 1 << 1
+
+        if partial_mod_2n < 0:
+            mux_sel += 1
+
+        print("Borrow:          ", bin(mux_sel))
+        
+        # print("Mux sel:         ", mux_sel)
+        
+
+        #M = partial
+
+        match mux_sel:
+            case 0b00:
+                print("Mux sel:         ", 2)
+                M = partial_mod_2n
+            case 0b01:
+                print("Mux sel:         ", 1)
+                M = partial_mod_1n
+            case 0b11:
+                print("Mux sel:         ", 0)
+                M = partial
+            case 0b10:
+                print("Mux sel:         ", "Invalid")
+                M = 0
+                
 
 
-M   = (A * B) % N
+        # M = partial
+
+        # if (partial_mod_1n >= 0):
+        #     print("Mux: 1")
+        #     M = partial_mod_1n
+        
+        # if (partial_mod_2n >= 0):
+        #     print("Mux: 2")
+        #     M = partial_mod_2n
+        
+        print("M:               ", hex2(M, 260))
+        print()
+        times -= 1
+
+    return M
+
+
+M1  = (A * B) % N
+
+M2  = MultiMod(A, B, N)
 
 print(f"A: {hex(A)}")
-print(f"A: {hex(B)}")
-print(f"A: {hex(N)}")
-print(f"M: {hex(M)}")
-
-
-number = "0x99925173AD65686715385EA800CD28120288FC70A9BC98DD4C90D676F8FF768D"
-
-def twos_comp(val, bits):
-    """compute the 2's complement of int value val"""
-    if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
-        val = val - (1 << bits)        # compute negative value
-    return val 
-
-# def twos(number):
-#     twos_part = ~number + 1
-#     print(f"Org num:        {number}")
-#     print(f"Twos num:       {twos_part}")
-#     print(f"Org num (hex):  {hex(number)}")
-#     print(f"Twos num (hex): {hex(twos_part)}")
-#     print(bin(number))
-#     print(bin(twos_part))
-#     return twos_part
-
-# print(hex(twos(number)))                        # return positive value as is
-
-print(twos_comp(int(number, 16), 256))
-binary = "01001100110010010010100010111001110101101011001010110100001100111000101010011100001011110101010000000000011001101001010000001001000000010100010001111110001110000101010011011110010011000110111010100110010010000110101100111011011111000111111110111011010001101"
-flipped = "0b"
-
-for c in binary:
-    match c:
-        case "0":
-            flipped += "1"
-        case "1":
-            flipped += "0"
-        case other:
-            flipped += c
-
-print(binary)
-print(flipped)
-
-print(int(binary,2))
-print(int(flipped,2) + 1)
-
-print(int(binary, 2))
-test1 = "10110011001101101101011101000110001010010100110101001011110011000111010101100011110100001010101111111111100110010110101111110110111111101011101110000001110001111010101100100001101100111001000101011001101101111001010011000100100000111000000001000100101110010"
-print(hex(int(test1, base=2)))
+print(f"B: {hex(B)}")
+print(f"N: {hex(N)}")
+print(f"M: {hex(M1)}")
+print(f"MM:{hex(M2)}")

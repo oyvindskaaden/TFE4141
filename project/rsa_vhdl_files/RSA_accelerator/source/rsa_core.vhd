@@ -66,7 +66,10 @@ entity rsa_core is
 end rsa_core;
 
 architecture rtl of rsa_core is
+	--signal msglast	: std_logic;
 
+	type state is (NOT_LAST, LAST);
+	signal current_msgstate, next_msgstate : state;
 begin
 	i_exponentiation : entity work.exponentiation
 		generic map (
@@ -85,6 +88,36 @@ begin
 			reset_n   => reset_n
 		);
 
-	msgout_last  <= msgin_last;
+	msgFSM: process (all) begin
+		case (current_msgstate) is
+			when (NOT_LAST) => 
+				msgout_last 	<= '0';
+
+				if (msgin_last and ready_in) then
+					next_msgstate 	<= LAST;
+				else
+					next_msgstate 	<= NOT_LAST;
+				end if;
+
+			when (LAST) =>
+				if (msgout_valid)
+					msgout_last		<= '1';
+					next_msgstate 	<= NOT_LAST;
+				else
+					next_msgstate 	<= LAST;
+					msgout_last 	<= '0';
+				end if;
+		end case;
+	end process msgFSM;
+
+	msgfsmSync : process(reset_n, clk) 
+    begin
+        if (reset_n = '0') then
+            curr_msgstate <= NOT_LAST;
+        elsif rising_edge(clk) then
+            curr_msgstate <= next_msgstate;
+        end if;
+    end process msgfsmSync;
+
 	rsa_status   <= (others => '0');
 end rtl;
