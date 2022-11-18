@@ -76,6 +76,8 @@ stimulus: process is
 		wait for 10 ns ;
 		A 		<= x"0a23232323232323232323232323232323232323232323232323232323232323";
 		B_2s	<= x"666dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973";
+		--B_2s	<= x"FF6dae8c529a9798eac7a157ff32d7edfd77038f56436722b36f298907008973";
+
         -- Expected 0x7090d1af75bdbabc0deac47b2255fb11209a26b279668a45d6924cac2a23ac96
         assert false report "Test done." severity note;
     	wait;
