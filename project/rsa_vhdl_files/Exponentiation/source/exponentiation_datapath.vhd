@@ -159,10 +159,9 @@ begin
     process (clk, reset_n) begin
         if (reset_n = '0') then
             --chipher_reg     <= std_logic_vector(to_unsigned(1, 256));
-            chipher_reg     <= (others => '0');
+            chipher_reg         <= (others => '0');
+
         elsif (clk'event and clk = '1' and chipher_reg_load = '1') then
-            -- This is also probably wrong
-            
             if (chipher_reg_sel = '1') then
                 -- Set partial to message (data)
                 chipher_reg     <= chipher_out;

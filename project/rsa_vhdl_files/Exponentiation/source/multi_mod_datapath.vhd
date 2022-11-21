@@ -164,21 +164,21 @@ begin
             C_block_size        => C_block_size
         )
         port map(
-            A => partial_sum , 
-            B_2s => ('1' & N_r) , 
-            result => partial_mod_1n , 
-            borrow =>borrow_1n
+            A       => partial_sum , 
+            B_2s    => ('1' & N_r) , 
+            result  => partial_mod_1n , 
+            borrow  =>borrow_1n
         );
 
     sub2 : entity work.subtractor_256b
         generic map (
-            C_block_size        => C_block_size
+            C_block_size    => C_block_size
         )
         port map(
-            A => partial_sum , 
-            B_2s => (N_r & '0') , 
-            result => partial_mod_2n , 
-            borrow =>borrow_2n 
+            A               => partial_sum , 
+            B_2s            => (N_r & '0') , 
+            result          => partial_mod_2n , 
+            borrow          =>borrow_2n 
         );
   
     -- MUX given mod_sel

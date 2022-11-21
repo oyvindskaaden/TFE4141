@@ -35,14 +35,14 @@ use IEEE.STD_LOGIC_SIGNED.ALL;
 
 entity subtractor_256b is
     generic (
-		C_block_size : integer := 256
+		C_block_size    : integer := 256
 	);
     port ( 
-        A       : in std_logic_vector(C_block_size downto 0);
-        B_2s       : in std_logic_vector(C_block_size downto 0);--Must be in 2s complement
+        A               : in std_logic_vector(C_block_size downto 0);
+        B_2s            : in std_logic_vector(C_block_size downto 0);--Must be in 2s complement
         
-        result  : out std_logic_vector(C_block_size-1 downto 0);
-        borrow  : out std_logic
+        result          : out std_logic_vector(C_block_size-1 downto 0);
+        borrow          : out std_logic
     );
 end subtractor_256b;
 
@@ -53,13 +53,13 @@ architecture Behavioral of subtractor_256b is
     
 begin
     process(A, B_2s) begin
-        tmpA <=  ('0' & A);  
-        tmpB <=  ('1' & B_2s); 
+        tmpA        <=  ('0' & A);  
+        tmpB        <=  ('1' & B_2s); 
         --tmpB <=  '0' & B_2s;  
     end process;
     
     process(tmpA,tmpB) begin
-        tempRes <= tmpA + tmpB;
+        tempRes     <= tmpA + tmpB;
         --tempRes <=  + ('1' & B_2s);
         --tempRes <= tmpA - tmpB;
         --tempRes <= std_logic_vector(('0' & '0' & unsigned(A)) + ('1' & '1' & unsigned(B)));
@@ -67,9 +67,9 @@ begin
     end process;
     
     process(tempRes) begin
-        result <= tempRes(C_block_size-1 downto 0);
-        overflow <= tempRes(C_block_size+1) xor tempRes(C_block_size);
-        borrow <= tempRes(C_block_size+1);
+        result      <= tempRes(C_block_size-1 downto 0);
+        overflow    <= tempRes(C_block_size+1) xor tempRes(C_block_size);
+        borrow      <= tempRes(C_block_size+1);
     end process;
 
 end Behavioral;
