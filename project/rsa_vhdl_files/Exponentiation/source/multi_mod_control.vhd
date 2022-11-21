@@ -195,6 +195,25 @@ begin
             else
                 next_state <= DONE;
             end if;
+
+        when others =>
+            mm_reset_n <= '0';
+            
+            cnt_en <= '0';
+            cnt_reset_n <= '0';
+            
+            A_reg_load <= '0';
+            N_reg_load <= '0';
+            M_reg_load <= '0';
+            B_reg_load <= '0';
+            
+            B_reg_sel <= '0';
+            
+            mm_data_out_valid <= '0';
+            mm_data_in_ready <= '0';
+            
+            next_state <= IDLE;
+        
         end case;
         
     end process fsmComb;
