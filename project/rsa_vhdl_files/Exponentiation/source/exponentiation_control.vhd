@@ -253,6 +253,10 @@ begin
                 mm_div_partial      <= '0';
                 mm_div_chipher      <= '0';
                 
+                mm_dor_partial <= '0';
+                mm_dor_chipher <= '0';
+                
+                
                 mm_reset_n          <= '0';
             
                 if(ready_out = '1') then

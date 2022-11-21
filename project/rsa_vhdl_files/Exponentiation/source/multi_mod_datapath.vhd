@@ -98,7 +98,7 @@ begin
     end process;
 
     --B Register
-    process(clk, reset_n, B_in) begin
+    process(clk, reset_n, B_in, B_reg_load, B_reg_sel) begin
         if(reset_n = '0') then
             B_r <= (others => '0');
         elsif(clk'event and clk='1' and B_reg_load='1') then
@@ -182,7 +182,7 @@ begin
         );
   
     -- MUX given mod_sel
-    process(clk) begin
+    process(clk, mod_sel, partial_sum, partial_mod_1n, partial_mod_2n) begin
         case mod_sel is
             when b"00" =>
                 M_mux_out <= partial_sum(C_block_size-1 downto 0);

@@ -161,6 +161,7 @@ begin
             mm_data_out_valid   <= '0';
             mm_data_in_ready    <= '0';
             
+         
             if (cnt_out = C_block_size) then
                 next_state      <= DONE;
             else
@@ -181,7 +182,8 @@ begin
             
             B_reg_sel           <= '1';
             
-            
+            mm_data_in_ready <= '0';
+
             mm_data_out_valid   <= '1';
             
             if (mm_data_out_ready = '1') then
