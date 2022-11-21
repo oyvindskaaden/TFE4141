@@ -99,44 +99,44 @@ begin
     fsmComb : process(all) begin
         case (curr_state) is
         when IDLE =>
-            mm_reset_n <= '0';
+            mm_reset_n          <= '0';
             
-            cnt_en <= '0';
-            cnt_reset_n <= '0';
+            cnt_en              <= '0';
+            cnt_reset_n         <= '0';
             
-            A_reg_load <= '0';
-            N_reg_load <= '0';
-            M_reg_load <= '0';
-            B_reg_load <= '0';
+            A_reg_load          <= '0';
+            N_reg_load          <= '0';
+            M_reg_load          <= '0';
+            B_reg_load          <= '0';
             
-            B_reg_sel <= '0';
+            B_reg_sel           <= '0';
             
-            mm_data_out_valid <= '0';
-            mm_data_in_ready <= '0';
+            mm_data_out_valid   <= '0';
+            mm_data_in_ready    <= '0';
             
             if(mm_data_in_valid = '1') then
-                next_state <= SETUP;
+                next_state      <= SETUP;
             else
-                next_state <= IDLE;
+                next_state      <= IDLE;
             end if;
             
             
         when SETUP => 
-            mm_reset_n <= '1';
+            mm_reset_n          <= '1';
             
-            cnt_en <= '1';
-            cnt_reset_n <= '1';
+            cnt_en              <= '1';
+            cnt_reset_n         <= '1';
             
-            A_reg_load <= '1';
-            N_reg_load <= '1';
-            B_reg_load <= '1';
-            M_reg_load <= '0';
+            A_reg_load          <= '1';
+            N_reg_load          <= '1';
+            B_reg_load          <= '1';
+            M_reg_load          <= '0';
 
             
-            B_reg_sel <= '0';
+            B_reg_sel           <= '0';
             
-            mm_data_out_valid <= '0';
-            mm_data_in_ready <= '1';
+            mm_data_out_valid   <= '0';
+            mm_data_in_ready    <= '1';
 
             next_state <= RUNNING;
             --if(mm_data_in_valid = '1') then
@@ -145,74 +145,68 @@ begin
             --    next_state <= IDLE;
             --end if;
            
-           
-            
         when RUNNING =>
-            mm_reset_n <= '1';
+            mm_reset_n          <= '1';
             
-            cnt_en <= '1';
-            cnt_reset_n <= '1';
+            cnt_en              <= '1';
+            cnt_reset_n         <= '1';
             
-            A_reg_load <= '0';
-            N_reg_load <= '0';
-            B_reg_load <= '1';
-            M_reg_load <= '1';
+            A_reg_load          <= '0';
+            N_reg_load          <= '0';
+            B_reg_load          <= '1';
+            M_reg_load          <= '1';
             
-            B_reg_sel <= '1';
+            B_reg_sel           <= '1';
             
-            mm_data_out_valid <= '0';
-            mm_data_in_ready <= '0';
+            mm_data_out_valid   <= '0';
+            mm_data_in_ready    <= '0';
             
-         
-            --if(mm_data_in_ready = '0') then
-            --    next_state <= IDLE;
-            --els
             if (cnt_out = C_block_size) then
-                next_state <= DONE;
+                next_state      <= DONE;
             else
-                next_state <= RUNNING;
+                next_state      <= RUNNING;
             end if;
             
             
         when DONE =>
-            mm_reset_n <= '1';
+            mm_reset_n          <= '1';
             
-            cnt_en <= '1';
-            cnt_reset_n <= '1';
+            cnt_en              <= '1';
+            cnt_reset_n         <= '1';
             
-            A_reg_load <= '0';
-            N_reg_load <= '0';
-            B_reg_load <= '0';
-            M_reg_load <= '0';
+            A_reg_load          <= '0';
+            N_reg_load          <= '0';
+            B_reg_load          <= '0';
+            M_reg_load          <= '0';
             
-            B_reg_sel <= '1';
+            B_reg_sel           <= '1';
             
             
-            mm_data_out_valid <= '1';
+            mm_data_out_valid   <= '1';
             
             if (mm_data_out_ready = '1') then
-                next_state <= IDLE;
+                next_state      <= IDLE;
             else
-                next_state <= DONE;
+                next_state      <= DONE;
             end if;
 
         when others =>
-            mm_reset_n <= '0';
+            mm_reset_n          <= '0';
             
-            cnt_en <= '0';
-            cnt_reset_n <= '0';
+            cnt_en              <= '0';
+            cnt_reset_n         <= '0';
             
-            A_reg_load <= '0';
-            N_reg_load <= '0';
-            M_reg_load <= '0';
-            B_reg_load <= '0';
+            A_reg_load          <= '0';
+            N_reg_load          <= '0';
+            M_reg_load          <= '0';
+            B_reg_load          <= '0';
             
-            B_reg_sel <= '0';
+            B_reg_sel           <= '0';
             
-            mm_data_out_valid <= '0';
-            mm_data_in_ready <= '0';
+            mm_data_out_valid   <= '0';
+            mm_data_in_ready    <= '0';
             
-            next_state <= IDLE;
+            next_state          <= IDLE;
         
         end case;
         
@@ -221,9 +215,9 @@ begin
     fsmSync : process(reset_n, clk) 
     begin
         if (reset_n = '0') then
-            curr_state <= IDLE;
+            curr_state  <= IDLE;
         elsif rising_edge(clk) then
-            curr_state <= next_state;
+            curr_state  <= next_state;
         end if;
     end process fsmSync;
     
