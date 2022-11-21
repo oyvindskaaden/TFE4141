@@ -140,7 +140,7 @@ begin
     result <= chipher_reg;
     
     -- Partial reg
-    process (clk, reset_n) begin
+    process (clk, reset_n, partial_reg_load, partial_reg_sel) begin
         if (reset_n = '0') then
             partial_reg     <= (others => '0');
             
@@ -156,7 +156,7 @@ begin
     end process;
     
     -- Chipher reg
-    process (clk, reset_n) begin
+    process (clk, reset_n, chipher_reg_load, chipher_reg_sel) begin
         if (reset_n = '0') then
             --chipher_reg     <= std_logic_vector(to_unsigned(1, 256));
             chipher_reg         <= (others => '0');
@@ -173,7 +173,7 @@ begin
     
     -- Exponent reg
     
-    process (clk, reset_n) begin
+    process (clk, reset_n, exponent_reg_load, exponent_reg_sel, exponent_reg) begin
         if (reset_n = '0') then
             exponent_reg    <= (others => '0');
             
