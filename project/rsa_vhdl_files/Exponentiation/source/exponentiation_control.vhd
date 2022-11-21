@@ -117,6 +117,8 @@ begin
                 
                 if (valid_in = '1') then
                     next_state <= SETUP;
+                else
+                    next_state <= IDLE;
                 end if;
                 
             when SETUP      =>
@@ -134,15 +136,15 @@ begin
                 mm_div_partial <= '1';
                 mm_div_chipher <= '1';
                 
+                mm_dor_partial <= '0';
+                mm_dor_chipher <= '0';
+                
                 mm_reset_n <= '0';
 
                 
                 next_state <= MULTIMOD_SETUP;
             
             when MULTIMOD_SETUP =>
-                mm_div_partial <= '1';
-                mm_div_chipher <= '1';
-                
                 
                 partial_reg_sel   <= '1';
                 chipher_reg_sel   <= '1';
@@ -154,6 +156,9 @@ begin
                 
                 mm_dor_partial <= '0';
                 mm_dor_chipher <= '0';
+                
+                mm_div_partial <= '1';
+                mm_div_chipher <= '1';
                 
                 
                 ready_in <= '0';
@@ -262,9 +267,11 @@ begin
      
      expSyncFSM: process (clk, reset_n) begin
         if (reset_n = '0') then
-          curr_state <= IDLE;
+            curr_state <= IDLE;
         elsif rising_edge(clk) then
-          curr_state <= next_state;
+            curr_state <= next_state;
+        else
+            null;
         end if;
     end process;
     
