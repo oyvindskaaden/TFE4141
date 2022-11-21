@@ -221,7 +221,7 @@ begin
                 mm_dor_partial <= '1';
                 mm_dor_chipher <= '1';
                 
-                --mm_reset_n <= '0';
+                mm_reset_n <= '0';
                 
                 if(exponent_lsb = '1') then
                     chipher_reg_load  <= '1';
@@ -237,8 +237,7 @@ begin
                             
             
 
-            when DONE       =>
-                
+            when DONE       =>  
                 partial_reg_sel   <= '0';
                 chipher_reg_sel   <= '0';
                 exponent_reg_sel  <= '0';
@@ -262,6 +261,28 @@ begin
                     
                 end if;
                 
+            when others => 
+                partial_reg_sel   <= '0';
+                chipher_reg_sel   <= '0';
+                exponent_reg_sel  <= '0';
+
+                partial_reg_load  <= '0';
+                chipher_reg_load  <= '0';
+                exponent_reg_load <= '0';
+                
+                ready_in <= '0';
+                valid_out <= '0';
+                
+                mm_div_partial <= '0';
+                mm_div_chipher <= '0';
+                
+                mm_dor_partial <= '0';
+                mm_dor_chipher <= '0';
+                
+                mm_reset_n <= '0';
+            
+                next_state <= IDLE;
+                               
         end case;
      end process;
      
