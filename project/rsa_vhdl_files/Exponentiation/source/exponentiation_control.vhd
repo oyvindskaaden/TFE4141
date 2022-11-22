@@ -294,7 +294,7 @@ begin
      expSyncFSM: process (clk, reset_n) begin
         if (reset_n = '0') then
             curr_state  <= IDLE;
-        elsif rising_edge(clk) then
+        elsif (clk'event and clk='1') then
             curr_state  <= next_state;
         else
             null;

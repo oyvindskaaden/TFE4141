@@ -133,7 +133,7 @@ begin
     begin
         if (reset_n = '0') then
             curr_msgstate <= NOT_LAST;
-        elsif rising_edge(clk) then
+        elsif (clk'event and clk='1') then
             curr_msgstate <= next_msgstate;
         end if;
     end process msgfsmSync;
