@@ -58,8 +58,8 @@ entity exponentiation is
 		clk 		: in    STD_LOGIC;
 		reset_n 	: in    STD_LOGIC;
 
-
 		rsa_status 	: out   STD_LOGIC_VECTOR(31 downto 0)
+
 	);
 end exponentiation;
 
@@ -142,7 +142,7 @@ begin
             exponent_reg_load => exponent_reg_load,
 
 			mm_reset_n 		  => mm_reset_n,
-
+			
 			rsa_status 		  => rsa_status
 	   );
 	   
