@@ -243,7 +243,7 @@ begin
                 chipher_reg_load    <= '0';
                 exponent_reg_load   <= '0';
                 
-                valid_out           <= '1';
+                valid_out           <= '0';
                 ready_in            <= '0';
                 
                 mm_div_partial      <= '0';
@@ -271,8 +271,8 @@ begin
                 mm_div_partial      <= '0';
                 mm_div_chipher      <= '0';
                 
-                mm_dor_partial <= '0';
-                mm_dor_chipher <= '0';
+                mm_dor_partial      <= '0';
+                mm_dor_chipher      <= '0';
                 
                 
                 mm_reset_n          <= '0';
