@@ -220,7 +220,8 @@ begin
                 mm_dor_partial      <= '1';
                 mm_dor_chipher      <= '1';
                 
-                mm_reset_n          <= '0';
+                --mm_reset_n          <= '0';
+                mm_reset_n          <= '1';
                 
                 if(exponent_lsb = '1') then
                     chipher_reg_load    <= '1';
@@ -253,7 +254,8 @@ begin
                 mm_dor_partial      <= '0';
                 mm_dor_chipher      <= '0';
                 
-                mm_reset_n          <= '0';
+                mm_reset_n          <= '1';
+                --mm_reset_n          <= '0';
 
                 next_state          <= DONE;
             when DONE       =>
@@ -276,7 +278,7 @@ begin
                 mm_dor_chipher      <= '0';
                 
                 
-                mm_reset_n          <= '0';
+                mm_reset_n          <= '1';
 
                 status_counter      <= status_counter + 1;
             
