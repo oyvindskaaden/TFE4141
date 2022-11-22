@@ -96,7 +96,7 @@ begin
       y             => cnt_out);
 
 
-    fsmComb : process(all) begin
+    fsmComb : process(curr_state, mm_data_in_valid, cnt_out, mm_data_out_ready) begin
         case (curr_state) is
         when IDLE =>
             mm_reset_n          <= '0';

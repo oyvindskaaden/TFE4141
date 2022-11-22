@@ -92,7 +92,7 @@ architecture Behavioral of exponentiation_control is
 begin
 
     --expFSM: process (curr_state, valid_in, exponent_lsb, exponent_is_0, mm_dor_partial, mm_dor_chipher, ready_out) begin
-    expFSM: process (all) begin
+    expFSM: process (curr_state, valid_in, mm_dir_partial, mm_dir_chipher, mm_dov_partial, mm_dov_chipher, exponent_lsb, exponent_is_0, ready_out) begin
         case (curr_state) is
             when IDLE       =>
                 partial_reg_sel     <= '0';
