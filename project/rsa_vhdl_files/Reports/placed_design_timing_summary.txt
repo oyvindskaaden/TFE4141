@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.1 (lin64) Build 2902540 Wed May 27 19:54:35 MDT 2020
-| Date         : Tue Nov 22 11:47:42 2022
+| Date         : Tue Nov 22 12:24:55 2022
 | Host         : thebeast running 64-bit Pop!_OS 22.04 LTS
 | Command      : report_timing_summary -max_paths 10 -file RSA_soc_wrapper_timing_summary_routed.rpt -pb RSA_soc_wrapper_timing_summary_routed.pb -rpx RSA_soc_wrapper_timing_summary_routed.rpx -warn_on_violation
 | Design       : rsa_soc_wrapper
