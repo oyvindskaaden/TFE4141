@@ -25,8 +25,7 @@ use ieee.numeric_std.all;
 entity rsa_core is
 	generic (
 		-- Users to add parameters here
-		C_BLOCK_SIZE          : integer := 256;
-		NO_CORES              : integer := 4
+		C_BLOCK_SIZE          : integer := 256
 	);
 	port (
 		-----------------------------------------------------------------------------
@@ -88,8 +87,7 @@ begin
 			result    	=> msgout_data ,
 			modulus   	=> key_n       ,
 			clk       	=> clk         ,
-			reset_n   	=> reset_n	   ,
-			rsa_status	=> rsa_status
+			reset_n   	=> reset_n	   
 		);
 	
 
