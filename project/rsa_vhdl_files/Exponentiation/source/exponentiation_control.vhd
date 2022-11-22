@@ -32,9 +32,6 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity exponentiation_control is
-    generic (
-		C_block_size : integer := 256
-	);
     port (
         -- Clock and Reset
         clk                 : in    std_logic;
