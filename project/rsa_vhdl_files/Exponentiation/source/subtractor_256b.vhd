@@ -48,7 +48,6 @@ end subtractor_256b;
 
 architecture Behavioral of subtractor_256b is
     signal tempRes, tmpA,tmpB : std_logic_vector(C_block_size+1 downto 0); --One extra bit for carry
-    signal overflow: std_logic;
     
     
 begin
@@ -68,7 +67,6 @@ begin
     
     process(tempRes) begin
         result      <= tempRes(C_block_size-1 downto 0);
-        overflow    <= tempRes(C_block_size+1) xor tempRes(C_block_size);
         borrow      <= tempRes(C_block_size+1);
     end process;
 

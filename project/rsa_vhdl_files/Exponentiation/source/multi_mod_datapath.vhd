@@ -66,10 +66,8 @@ end multi_mod_datapath;
 architecture Behavioral of multi_mod_datapath is
     signal A_r, A_mux : std_logic_vector(C_block_size-1 downto 0);
     signal B_r : std_logic_vector(C_block_size-1 downto 0);
-    signal N_r : std_logic_vector(C_block_size-1 downto 0);
+    -- signal N_r : std_logic_vector(C_block_size-1 downto 0);
     signal M_r : std_logic_vector(C_block_size-1 downto 0);
-    
-    signal B_msb            : std_logic;
 
     --signal a_reg_sel : std_logic;
 
@@ -82,12 +80,10 @@ architecture Behavioral of multi_mod_datapath is
     
 begin
     
-    B_msb <= B_r(C_block_size-1);
-    
     M_out <= M_r;
 
     --A Register
-    process(clk, reset_n, A_in) begin
+    process(clk, reset_n) begin
         if(reset_n = '0') then
             A_r <= (others => '0');
         elsif(clk'event and clk='1') then
@@ -98,7 +94,7 @@ begin
     end process;
 
     --B Register
-    process(clk, reset_n, B_in, B_reg_load, B_reg_sel) begin
+    process(clk, reset_n) begin
         if(reset_n = '0') then
             B_r <= (others => '0');
         elsif(clk'event and clk='1' and B_reg_load='1') then
@@ -121,7 +117,7 @@ begin
     --        end if;
     --    end if;
     --end process;
-    N_r <= N_in;
+    --N_r <= N_in;
     
     --M Register
     process(clk, reset_n) begin
@@ -165,7 +161,7 @@ begin
         )
         port map(
             A       => partial_sum , 
-            B_2s    => ('1' & N_r) , 
+            B_2s    => ('1' & N_in) , 
             result  => partial_mod_1n , 
             borrow  =>borrow_1n
         );
@@ -176,13 +172,13 @@ begin
         )
         port map(
             A               => partial_sum , 
-            B_2s            => (N_r & '0') , 
+            B_2s            => (N_in & '0') , 
             result          => partial_mod_2n , 
             borrow          =>borrow_2n 
         );
   
     -- MUX given mod_sel
-    process(clk, mod_sel, partial_sum, partial_mod_1n, partial_mod_2n) begin
+    process(mod_sel, partial_sum, partial_mod_1n, partial_mod_2n) begin
         case mod_sel is
             when b"00" =>
                 M_mux_out <= partial_sum(C_block_size-1 downto 0);
