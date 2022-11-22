@@ -252,6 +252,8 @@ begin
                 
                 mm_dor_partial      <= '0';
                 mm_dor_chipher      <= '0';
+                
+                mm_reset_n          <= '0';
 
                 next_state          <= DONE;
             when DONE       =>
