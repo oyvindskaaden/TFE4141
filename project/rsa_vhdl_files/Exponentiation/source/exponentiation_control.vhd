@@ -315,7 +315,7 @@ begin
      expSyncFSM: process (clk, reset_n) begin
         if (reset_n = '0') then
             curr_state  <= IDLE;
-            status_counter <= '1';
+            status_counter <= TO_UNSIGNED(1,32);
         elsif (clk'event and clk='1') then
             curr_state  <= next_state;
         else
