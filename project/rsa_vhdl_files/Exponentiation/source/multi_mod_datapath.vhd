@@ -51,7 +51,7 @@ entity multi_mod_datapath is
         A_reg_load  : in std_logic;
         B_reg_load  : in std_logic;
         M_reg_load  : in std_logic;
-        N_reg_load  : in std_logic;
+        --N_reg_load  : in std_logic;
 
         B_reg_sel   : in std_logic;
 

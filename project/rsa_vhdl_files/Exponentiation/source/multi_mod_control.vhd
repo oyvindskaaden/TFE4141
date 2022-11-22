@@ -52,7 +52,7 @@ entity multi_mod_control is
         A_reg_load  : out std_logic;
         B_reg_load  : out std_logic;
         M_reg_load  : out std_logic;
-        N_reg_load  : out std_logic;
+        --N_reg_load  : out std_logic;
 
         B_reg_sel   : out std_logic;
 
@@ -105,7 +105,7 @@ begin
             cnt_reset_n         <= '0';
             
             A_reg_load          <= '0';
-            N_reg_load          <= '0';
+            --N_reg_load          <= '0';
             M_reg_load          <= '0';
             B_reg_load          <= '0';
             
@@ -128,7 +128,7 @@ begin
             cnt_reset_n         <= '1';
             
             A_reg_load          <= '1';
-            N_reg_load          <= '1';
+            --N_reg_load          <= '1';
             B_reg_load          <= '1';
             M_reg_load          <= '0';
 
@@ -152,7 +152,7 @@ begin
             cnt_reset_n         <= '1';
             
             A_reg_load          <= '0';
-            N_reg_load          <= '0';
+            --N_reg_load          <= '0';
             B_reg_load          <= '1';
             M_reg_load          <= '1';
             
@@ -176,7 +176,7 @@ begin
             cnt_reset_n         <= '1';
             
             A_reg_load          <= '0';
-            N_reg_load          <= '0';
+            --N_reg_load          <= '0';
             B_reg_load          <= '0';
             M_reg_load          <= '0';
             
@@ -199,7 +199,7 @@ begin
             cnt_reset_n         <= '0';
             
             A_reg_load          <= '0';
-            N_reg_load          <= '0';
+            --N_reg_load          <= '0';
             M_reg_load          <= '0';
             B_reg_load          <= '0';
             

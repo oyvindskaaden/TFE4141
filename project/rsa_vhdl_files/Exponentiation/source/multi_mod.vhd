@@ -62,7 +62,7 @@ architecture Behavioral of multi_mod is
     signal A_reg_load               : std_logic;
     signal B_reg_load               : std_logic;
     signal M_reg_load               : std_logic;
-    signal N_reg_load               : std_logic;
+    --signal N_reg_load               : std_logic;
     
     signal B_reg_sel                : std_logic;
     
@@ -91,7 +91,7 @@ begin
             -- Register load signals
             A_reg_load          => A_reg_load,
             B_reg_load          => B_reg_load,
-            N_reg_load          => N_reg_load,
+            --N_reg_load          => N_reg_load,
             
             M_reg_load          => M_reg_load,
             
@@ -130,7 +130,7 @@ begin
             -- Register load signals
             A_reg_load  => A_reg_load,
             B_reg_load  => B_reg_load,
-            N_reg_load  => N_reg_load,
+            --N_reg_load  => N_reg_load,
             
             M_reg_load  => M_reg_load,
 			
