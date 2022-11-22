@@ -21,7 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.std_logic_signed.all;
+--use IEEE.std_logic_signed.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -162,7 +162,7 @@ begin
             mm_data_in_ready    <= '0';
             
          
-            if (cnt_out = C_block_size) then
+            if (cnt_out = std_logic_vector(TO_UNSIGNED(C_block_size, 8))) then
                 next_state      <= DONE;
             else
                 next_state      <= RUNNING;
