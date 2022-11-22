@@ -218,7 +218,7 @@ begin
     begin
         if (reset_n = '0') then
             curr_state  <= IDLE;
-        elsif rising_edge(clk) then
+        elsif (clk'event and clk='1') then
             curr_state  <= next_state;
         end if;
     end process fsmSync;
