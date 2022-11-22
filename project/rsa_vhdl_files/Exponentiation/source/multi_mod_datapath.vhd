@@ -25,7 +25,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+--use IEEE.STD_LOGIC_SIGNED.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -145,7 +145,7 @@ begin
     end process;
     
     process(A_mux, M_r) begin
-        partial_sum <= (M_r(C_block_size-1 downto 0) & '0') + ('0' & A_mux);
+        partial_sum <= std_logic_vector(unsigned(M_r(C_block_size-1 downto 0) & '0') + unsigned('0' & A_mux));
 
     end process;
     

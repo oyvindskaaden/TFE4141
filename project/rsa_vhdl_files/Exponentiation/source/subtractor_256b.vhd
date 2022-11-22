@@ -58,7 +58,7 @@ begin
     end process;
     
     process(tmpA,tmpB) begin
-        tempRes     <= tmpA + tmpB;
+        tempRes     <= std_logic_vector(unsigned(tmpA) + unsigned(tmpB));
         --tempRes <=  + ('1' & B_2s);
         --tempRes <= tmpA - tmpB;
         --tempRes <= std_logic_vector(('0' & '0' & unsigned(A)) + ('1' & '1' & unsigned(B)));
