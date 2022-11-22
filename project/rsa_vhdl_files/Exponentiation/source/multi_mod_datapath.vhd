@@ -89,6 +89,8 @@ begin
         elsif(clk'event and clk='1') then
             if(A_reg_load='1') then
                 A_r <= A_in;
+            else
+                A_r <= A_r;
             end if;
         end if;
     end process;
@@ -98,10 +100,10 @@ begin
         if(reset_n = '0') then
             B_r <= (others => '0');
         elsif(clk'event and clk='1' and B_reg_load='1') then
-            if(B_reg_sel='0') then
-                B_r <= B_in;
-            elsif(B_reg_sel='1') then
+            if(B_reg_sel='1') then
                 B_r <= B_r(C_block_size-2 downto 0) & '0';
+            else
+                B_r <= B_in;
             end if;
         end if;
     end process;
@@ -126,6 +128,8 @@ begin
         elsif(clk'event and clk='1') then
             if(M_reg_load='1') then
                 M_r <= M_mux_out;
+            else
+                M_r <= M_r;
             end if;
         end if;
 
