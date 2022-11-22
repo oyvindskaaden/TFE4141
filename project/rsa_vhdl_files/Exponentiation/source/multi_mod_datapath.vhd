@@ -96,7 +96,7 @@ begin
     end process;
 
     --B Register
-    process(clk, reset_n) begin
+    process(clk, reset_n, B_reg_load) begin
         if(reset_n = '0') then
             B_r <= (others => '0');
         elsif(clk'event and clk='1' and B_reg_load='1') then
