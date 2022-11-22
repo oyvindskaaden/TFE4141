@@ -84,7 +84,7 @@ entity exponentiation_control is
 end exponentiation_control;
 
 architecture Behavioral of exponentiation_control is
-    type state is (IDLE, SETUP, MULTIMOD, MULTIMOD_SETUP, RUNNING, DONE);
+    type state is (IDLE, SETUP, MULTIMOD, MULTIMOD_SETUP, RUNNING, OUT_WAIT, DONE);
     signal curr_state, next_state   : state;
 begin
 
@@ -227,13 +227,31 @@ begin
                 end if;
                 
                 if(exponent_is_0 = '1') then
-                    next_state      <= DONE;
+                    next_state      <= OUT_WAIT;
                 else
                     next_state      <= MULTIMOD_SETUP;
                 end if;
                             
             
+            when OUT_WAIT   =>
+                partial_reg_sel     <= '0';
+                chipher_reg_sel     <= '0';
+                exponent_reg_sel    <= '0';
 
+                partial_reg_load    <= '0';
+                chipher_reg_load    <= '0';
+                exponent_reg_load   <= '0';
+                
+                valid_out           <= '1';
+                ready_in            <= '0';
+                
+                mm_div_partial      <= '0';
+                mm_div_chipher      <= '0';
+                
+                mm_dor_partial      <= '0';
+                mm_dor_chipher      <= '0';
+
+                next_state          <= DONE;
             when DONE       =>
                 
                 partial_reg_sel     <= '0';
