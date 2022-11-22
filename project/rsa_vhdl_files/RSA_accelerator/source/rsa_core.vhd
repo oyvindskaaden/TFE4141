@@ -72,7 +72,7 @@ end rsa_core;
 architecture rtl of rsa_core is
 
 	type state is (NOT_LAST, LAST, HOLD);
-	signal current_msgstate, next_msgstate : state;
+	signal curr_msgstate, next_msgstate : state;
 begin
 	i_exponentiation : entity work.exponentiation
 		generic map (
@@ -92,8 +92,8 @@ begin
 		);
 	
 
-	msgFSM: process (all) begin
-		case (current_msgstate) is
+	msgFSM: process (curr_msgstate, msgin_last, msgin_ready, msgout_valid) begin
+		case (curr_msgstate) is
 			when (NOT_LAST) => 
 				msgout_last 	<= '0';
 
@@ -132,9 +132,9 @@ begin
 	msgfsmSync : process(reset_n, clk) 
     begin
         if (reset_n = '0') then
-            current_msgstate <= NOT_LAST;
+            curr_msgstate <= NOT_LAST;
         elsif rising_edge(clk) then
-            current_msgstate <= next_msgstate;
+            curr_msgstate <= next_msgstate;
         end if;
     end process msgfsmSync;
 
