@@ -84,10 +84,11 @@ architecture Behavioral of exponentiation_control is
     type state is (IDLE, SETUP, MULTIMOD, MULTIMOD_SETUP, RUNNING, OUT_WAIT, DONE);
     signal curr_state, next_state   : state;
 
-    signal status_counter : std_logic_vector(31 downto 0); 
+    signal status_counter : unsigned(31 downto 0); 
 begin
 
-    rsa_status <= status_counter;
+    rsa_status <= std_logic_vector(status_counter);
+    --rsa_status <= '1';
 
     --expFSM: process (curr_state, valid_in, exponent_lsb, exponent_is_0, mm_dor_partial, mm_dor_chipher, ready_out) begin
     expFSM: process (curr_state, valid_in, mm_dir_partial, mm_dir_chipher, mm_dov_partial, mm_dov_chipher, exponent_lsb, exponent_is_0, ready_out) begin
@@ -314,7 +315,7 @@ begin
      expSyncFSM: process (clk, reset_n) begin
         if (reset_n = '0') then
             curr_state  <= IDLE;
-            status_counter <= '1';
+            status_counter <= TO_UNSIGNED(1,32);
         elsif (clk'event and clk='1') then
             curr_state  <= next_state;
         else
