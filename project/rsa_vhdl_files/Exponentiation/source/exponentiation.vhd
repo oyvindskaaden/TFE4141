@@ -56,7 +56,10 @@ entity exponentiation is
 
 		--utility
 		clk 		: in    STD_LOGIC;
-		reset_n 	: in    STD_LOGIC
+		reset_n 	: in    STD_LOGIC;
+
+
+		rsa_status 	: out   STD_LOGIC_VECTOR(31 downto 0)
 	);
 end exponentiation;
 
@@ -93,6 +96,7 @@ architecture expBehave of exponentiation is
     signal exponent_reg_load : std_logic;
     
     signal mm_reset_n        : std_logic;
+
 
 
 begin
@@ -137,7 +141,9 @@ begin
             chipher_reg_load  => chipher_reg_load,
             exponent_reg_load => exponent_reg_load,
 
-			mm_reset_n 		  => mm_reset_n
+			mm_reset_n 		  => mm_reset_n,
+
+			rsa_status 		  => rsa_status
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
