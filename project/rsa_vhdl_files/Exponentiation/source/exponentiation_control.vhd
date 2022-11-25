@@ -187,13 +187,35 @@ begin
                 valid_out           <= '0';
                 
                 if ((mm_dov_partial = '1') and (mm_dov_chipher = '1')) then
-                    next_state      <= RUNNING;
+                    next_state      <= OUT_WAIT;
                     --partial_reg_load  <= '1';
                     --chipher_reg_load  <= '1';
                 else
                     next_state      <= MULTIMOD;
                 end if;
             
+             when OUT_WAIT   =>
+                partial_reg_sel     <= '1';
+                chipher_reg_sel     <= '1';
+                exponent_reg_sel    <= '1';
+
+                partial_reg_load    <= '0';
+                chipher_reg_load    <= '0';
+                exponent_reg_load   <= '0';
+                
+                valid_out           <= '0';
+                ready_in            <= '0';
+                
+                mm_div_partial      <= '0';
+                mm_div_chipher      <= '0';
+                
+                mm_dor_partial      <= '0';
+                mm_dor_chipher      <= '0';
+                
+                mm_reset_n          <= '1';
+                --mm_reset_n          <= '0';
+
+                next_state          <= RUNNING;
             
             when RUNNING    =>
                 partial_reg_sel     <= '1';
@@ -223,34 +245,13 @@ begin
                 end if;
                 
                 if(exponent_is_0 = '1') then
-                    next_state      <= OUT_WAIT;
+                    next_state      <= DONE;
                 else
                     next_state      <= MULTIMOD_SETUP;
                 end if;
                             
             
-            when OUT_WAIT   =>
-                partial_reg_sel     <= '0';
-                chipher_reg_sel     <= '0';
-                exponent_reg_sel    <= '0';
-
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                valid_out           <= '0';
-                ready_in            <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                mm_reset_n          <= '1';
-                --mm_reset_n          <= '0';
-
-                next_state          <= DONE;
+           
             when DONE       =>
                 
                 partial_reg_sel     <= '0';
