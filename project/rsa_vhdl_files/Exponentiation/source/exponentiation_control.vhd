@@ -45,37 +45,34 @@ entity exponentiation_control is
         ready_out	        : in    std_logic;
         valid_out	        : out   std_logic;
         
+        -- Reg Control
         partial_reg_sel     : out   std_logic;
         chipher_reg_sel     : out   std_logic;
         exponent_reg_sel    : out   std_logic;
         
+        -- Reg Load Control
         partial_reg_load    : out   std_logic;
         chipher_reg_load    : out   std_logic;
         exponent_reg_load   : out   std_logic;
 
-        
-        
-        
         -- MultiMod Data in/out ready for partial block
         mm_div_partial      : out   std_logic;
         mm_dir_partial      : in    std_logic;
-
         mm_dov_partial      : in    std_logic;
         mm_dor_partial      : out   std_logic;
 
-        
         -- MultiMod Data in/out ready for chipher block		
 		mm_div_chipher      : out   std_logic;
         mm_dir_chipher      : in    std_logic;
-               
         mm_dov_chipher      : in    std_logic;
         mm_dor_chipher      : out   std_logic;
         
+        -- Seperate MM Reset
         mm_reset_n          : out   std_logic;
 
+        -- Exponentiation data
         exponent_lsb        : in std_logic;
         exponent_is_0       : in std_logic
-
     );
 end exponentiation_control;
 
@@ -86,224 +83,221 @@ begin
     --expFSM: process (curr_state, valid_in, exponent_lsb, exponent_is_0, mm_dor_partial, mm_dor_chipher, ready_out) begin
     expFSM: process (curr_state, valid_in, mm_dir_partial, mm_dir_chipher, mm_dov_partial, mm_dov_chipher, exponent_lsb, exponent_is_0, ready_out) begin
         case (curr_state) is
-            when IDLE       =>
-                partial_reg_sel     <= '0';
-                chipher_reg_sel     <= '0';
-                exponent_reg_sel    <= '0';
+        when IDLE       =>
+            partial_reg_sel     <= '0';
+            chipher_reg_sel     <= '0';
+            exponent_reg_sel    <= '0';
 
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                ready_in            <= '0';
-                valid_out           <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                mm_reset_n          <= '0';
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
+            
+            ready_in            <= '0';
+            valid_out           <= '0';
+            
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            mm_reset_n          <= '0';
 
-                
-                if (valid_in = '1') then
-                    next_state      <= SETUP;
-                else
-                    next_state      <= IDLE;
-                end if;
-                
-            when SETUP      =>
-                partial_reg_sel     <= '0';
-                chipher_reg_sel     <= '0';
-                exponent_reg_sel    <= '0';
+            
+            if (valid_in = '1') then
+                next_state      <= SETUP;
+            else
+                next_state      <= IDLE;
+            end if;
+            
+        when SETUP      =>
+            partial_reg_sel     <= '0';
+            chipher_reg_sel     <= '0';
+            exponent_reg_sel    <= '0';
 
-                partial_reg_load    <= '1';
+            partial_reg_load    <= '1';
+            chipher_reg_load    <= '1';
+            exponent_reg_load   <= '1';
+            
+            ready_in            <= '1';
+            valid_out           <= '0';
+            
+            mm_div_partial      <= '1';
+            mm_div_chipher      <= '1';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            mm_reset_n          <= '0';
+
+            
+            next_state          <= MULTIMOD_SETUP;
+        
+        when MULTIMOD_SETUP =>
+            
+            partial_reg_sel     <= '1';
+            chipher_reg_sel     <= '1';
+            exponent_reg_sel    <= '1';
+
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            mm_div_partial      <= '1';
+            mm_div_chipher      <= '1';
+            
+            
+            ready_in            <= '0';
+            valid_out           <= '0';
+            
+            mm_reset_n          <= '1';
+
+            
+            if (mm_dir_partial = '1' and mm_dir_chipher = '1') then
+                next_state      <= MULTIMOD;
+            else
+                next_state      <= MULTIMOD_SETUP;
+            end if;
+            
+        when MULTIMOD   => 
+            partial_reg_sel     <= '1';
+            chipher_reg_sel     <= '1';
+            exponent_reg_sel    <= '1';
+
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
+            
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            
+            mm_reset_n          <= '1';
+            
+            ready_in            <= '0';
+            valid_out           <= '0';
+            
+            if ((mm_dov_partial = '1') and (mm_dov_chipher = '1')) then
+                next_state      <= OUT_WAIT;
+            else
+                next_state      <= MULTIMOD;
+            end if;
+            
+        when OUT_WAIT   =>
+            partial_reg_sel     <= '1';
+            chipher_reg_sel     <= '1';
+            exponent_reg_sel    <= '1';
+
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
+            
+            valid_out           <= '0';
+            ready_in            <= '0';
+            
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            mm_reset_n          <= '1';
+            --mm_reset_n          <= '0';
+
+            next_state          <= RUNNING;
+        
+        when RUNNING    =>
+            partial_reg_sel     <= '1';
+            chipher_reg_sel     <= '1';
+            exponent_reg_sel    <= '1';
+
+            partial_reg_load    <= '1';
+            --chipher_reg_load    <= '1';
+            exponent_reg_load   <= '1';
+            
+            ready_in            <= '0';
+            valid_out           <= '0';
+            
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
+            
+            mm_dor_partial      <= '1';
+            mm_dor_chipher      <= '1';
+            
+            --mm_reset_n          <= '0';
+            mm_reset_n          <= '1';
+            
+            if(exponent_lsb = '1') then
                 chipher_reg_load    <= '1';
-                exponent_reg_load   <= '1';
-                
-                ready_in            <= '1';
-                valid_out           <= '0';
-                
-                mm_div_partial      <= '1';
-                mm_div_chipher      <= '1';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                mm_reset_n          <= '0';
-
-                
-                next_state          <= MULTIMOD_SETUP;
-            
-            when MULTIMOD_SETUP =>
-                
-                partial_reg_sel     <= '1';
-                chipher_reg_sel     <= '1';
-                exponent_reg_sel    <= '1';
-
-                partial_reg_load    <= '0';
+            else
                 chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                mm_div_partial      <= '1';
-                mm_div_chipher      <= '1';
-                
-                
-                ready_in            <= '0';
-                valid_out           <= '0';
-                
-                mm_reset_n          <= '1';
-
-                
-                if (mm_dir_partial = '1' and mm_dir_chipher = '1') then
-                    next_state      <= MULTIMOD;
-                else
-                    next_state      <= MULTIMOD_SETUP;
-                end if;
-                
-            when MULTIMOD   => 
-                partial_reg_sel     <= '1';
-                chipher_reg_sel     <= '1';
-                exponent_reg_sel    <= '1';
-
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                
-                mm_reset_n          <= '1';
-                
-                ready_in            <= '0';
-                valid_out           <= '0';
-                
-                if ((mm_dov_partial = '1') and (mm_dov_chipher = '1')) then
-                    next_state      <= OUT_WAIT;
-                    --partial_reg_load  <= '1';
-                    --chipher_reg_load  <= '1';
-                else
-                    next_state      <= MULTIMOD;
-                end if;
+            end if;
             
-             when OUT_WAIT   =>
-                partial_reg_sel     <= '1';
-                chipher_reg_sel     <= '1';
-                exponent_reg_sel    <= '1';
-
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                valid_out           <= '0';
-                ready_in            <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                mm_reset_n          <= '1';
-                --mm_reset_n          <= '0';
-
-                next_state          <= RUNNING;
+            if(exponent_is_0 = '1') then
+                next_state      <= DONE;
+            else
+                next_state      <= MULTIMOD_SETUP;
+            end if;
+                        
+        
+        
+        when DONE       =>
             
-            when RUNNING    =>
-                partial_reg_sel     <= '1';
-                chipher_reg_sel     <= '1';
-                exponent_reg_sel    <= '1';
+            partial_reg_sel     <= '0';
+            chipher_reg_sel     <= '0';
+            exponent_reg_sel    <= '0';
 
-                partial_reg_load    <= '1';
-                --chipher_reg_load    <= '1';
-                exponent_reg_load   <= '1';
-                
-                ready_in            <= '0';
-                valid_out           <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '1';
-                mm_dor_chipher      <= '1';
-                
-                --mm_reset_n          <= '0';
-                mm_reset_n          <= '1';
-                
-                if(exponent_lsb = '1') then
-                    chipher_reg_load    <= '1';
-                else
-                    chipher_reg_load    <= '0';
-                end if;
-                
-                if(exponent_is_0 = '1') then
-                    next_state      <= DONE;
-                else
-                    next_state      <= MULTIMOD_SETUP;
-                end if;
-                            
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
             
-           
-            when DONE       =>
-                
-                partial_reg_sel     <= '0';
-                chipher_reg_sel     <= '0';
-                exponent_reg_sel    <= '0';
-
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                valid_out           <= '1';
-                ready_in            <= '0';
-                
-                mm_div_partial      <= '0';
-                mm_div_chipher      <= '0';
-                
-                mm_dor_partial      <= '0';
-                mm_dor_chipher      <= '0';
-                
-                
-                mm_reset_n          <= '1';
-
+            valid_out           <= '1';
+            ready_in            <= '0';
             
-                if(ready_out = '1') then
-                    next_state      <= IDLE;
-                else
-                    next_state      <= DONE;
-                    
-                end if;
-                
-            when others => 
-                partial_reg_sel   <= '0';
-                chipher_reg_sel   <= '0';
-                exponent_reg_sel  <= '0';
-
-                partial_reg_load    <= '0';
-                chipher_reg_load    <= '0';
-                exponent_reg_load   <= '0';
-                
-                ready_in <= '0';
-                valid_out <= '0';
-                
-                mm_div_partial <= '0';
-                mm_div_chipher <= '0';
-                
-                mm_dor_partial <= '0';
-                mm_dor_chipher <= '0';
-                
-                mm_reset_n <= '0';
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
             
-                next_state <= IDLE;
-                               
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            
+            mm_reset_n          <= '1';
+
+        
+            if(ready_out = '1') then
+                next_state      <= IDLE;
+            else
+                next_state      <= DONE;
+                
+            end if;
+            
+        when others => 
+            partial_reg_sel     <= '0';
+            chipher_reg_sel     <= '0';
+            exponent_reg_sel    <= '0';
+
+            partial_reg_load    <= '0';
+            chipher_reg_load    <= '0';
+            exponent_reg_load   <= '0';
+            
+            ready_in            <= '0';
+            valid_out           <= '0';
+            
+            mm_div_partial      <= '0';
+            mm_div_chipher      <= '0';
+            
+            mm_dor_partial      <= '0';
+            mm_dor_chipher      <= '0';
+            
+            mm_reset_n          <= '0';
+        
+            next_state          <= IDLE;     
         end case;
      end process;
      

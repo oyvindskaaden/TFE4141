@@ -39,34 +39,34 @@ entity multi_mod_control is
 	);
     Port (
     
-        --mm_data_in_ready    : in std_logic;     
-        --mm_data_out_ready   : out std_logic;    
+        -- Reset and Clock
+        reset_n             : in std_logic;
+        clk                 : in std_logic;
+
+        -- Seperate MM datapath reset
+        mm_reset_n          : out std_logic;
         
+        -- Data valid and ready signals
         mm_data_in_valid    : in    std_logic;
         mm_data_in_ready    : out   std_logic;
-
         mm_data_out_valid   : out   std_logic;
         mm_data_out_ready   : in    std_logic; 
 
         -- Datapath control logic
-        A_reg_load  : out std_logic;
-        B_reg_load  : out std_logic;
-        M_reg_load  : out std_logic;
-        --N_reg_load  : out std_logic;
+        A_reg_load          : out std_logic;
+        B_reg_load          : out std_logic;
+        M_reg_load          : out std_logic;
 
-        B_reg_sel   : out std_logic;
+        -- Source selction for the B register
+        B_reg_sel           : out std_logic;
 
-        mod_sel     : out std_logic_vector(1 downto 0);
+        -- Selection of correct calculation result
+        mod_sel             : out std_logic_vector(1 downto 0);
 
         -- Borrow signals
-        borrow_1n   : in std_logic;
-        borrow_2n   : in std_logic;
-
-        mm_reset_n  : out std_logic;
-
-        -- Reset and Clock
-        reset_n     : in std_logic;
-        clk         : in std_logic
+        borrow_1n           : in std_logic;
+        borrow_2n           : in std_logic
+        
     );
 end multi_mod_control;
 
@@ -79,13 +79,11 @@ architecture Behavioral of multi_mod_control is
     type state is (IDLE, SETUP, RUNNING, WAIT_OUT, DONE);
     signal curr_state, next_state : state;
     
-    signal borrow       :std_logic_vector(1 downto 0);
+    signal borrow       : std_logic_vector(1 downto 0);
 begin
 
     borrow <= (borrow_1n & borrow_2n);
     
-
-
     counter : entity work.counter 
     generic map (
       COUNTER_WIDTH => COUNTER_WIDTH)
@@ -93,7 +91,8 @@ begin
       clk           => clk,
       reset_n       => cnt_reset_n,
       cnt_en        => cnt_en,
-      y             => cnt_out);
+      y             => cnt_out
+    );
 
 
     fsmComb : process(curr_state, mm_data_in_valid, cnt_out, mm_data_out_ready) begin
@@ -200,7 +199,7 @@ begin
             
             B_reg_sel           <= '1';
             
-            mm_data_in_ready <= '0';
+            mm_data_in_ready    <= '0';
 
             mm_data_out_valid   <= '1';
             
