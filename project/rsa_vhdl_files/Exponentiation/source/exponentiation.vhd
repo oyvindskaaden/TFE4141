@@ -112,6 +112,16 @@ begin
             ready_out   => ready_out,
             valid_out   => valid_out,
 
+			-- Reg control
+            partial_reg_sel   => partial_reg_sel,
+            chipher_reg_sel   => chipher_reg_sel,
+            exponent_reg_sel  => exponent_reg_sel,
+
+            -- Reg Load Control
+            partial_reg_load  => partial_reg_load,
+            chipher_reg_load  => chipher_reg_load,
+            exponent_reg_load => exponent_reg_load,
+
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
 			mm_dor_partial    => mm_dor_partial,
@@ -124,22 +134,12 @@ begin
 			mm_div_chipher    => mm_div_chipher,
 			mm_dov_chipher    => mm_dov_chipher,
 
+			-- Seperate MM reset
+			mm_reset_n 		  => mm_reset_n,
+
 			-- Exponentiation data
 			exponent_lsb	  => exponent_lsb,
-			exponent_is_0	  => exponent_is_0,
-			
-			-- Reg control
-            partial_reg_sel   => partial_reg_sel,
-            chipher_reg_sel   => chipher_reg_sel,
-            exponent_reg_sel  => exponent_reg_sel,
-
-            -- Reg Load Contro 
-            partial_reg_load  => partial_reg_load,
-            chipher_reg_load  => chipher_reg_load,
-            exponent_reg_load => exponent_reg_load,
-
-			mm_reset_n 		  => mm_reset_n
-			
+			exponent_is_0	  => exponent_is_0
 	   );
 	   
 	u_exponentiation_datapath: entity work.exponentiation_datapath
@@ -147,6 +147,7 @@ begin
 			C_block_size        => C_block_size
 		)
         port map (
+			-- Clock and Reset
             clk         => clk,
             reset_n     => reset_n,
             
@@ -160,6 +161,16 @@ begin
             --output data
             result 		=> result,
 
+			-- Reg control
+            partial_reg_sel      => partial_reg_sel,
+            chipher_reg_sel      => chipher_reg_sel,
+            exponent_reg_sel     => exponent_reg_sel,
+
+            -- Reg Load Contro    
+            partial_reg_load     => partial_reg_load,
+            chipher_reg_load     => chipher_reg_load,
+            exponent_reg_load    => exponent_reg_load
+
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
 			mm_dor_partial    => mm_dor_partial,
@@ -172,22 +183,12 @@ begin
 			mm_div_chipher       => mm_div_chipher,
 			mm_dov_chipher       => mm_dov_chipher,
 			
+			-- Seperate MM reset
 			mm_reset_n           => mm_reset_n,
 
 			-- Exponentiation    data
 			exponent_lsb	     => exponent_lsb,
-			exponent_is_0	     => exponent_is_0,		
-			
-			-- Reg control
-            partial_reg_sel      => partial_reg_sel,
-            chipher_reg_sel      => chipher_reg_sel,
-            exponent_reg_sel     => exponent_reg_sel,
-
-            -- Reg Load Contro    
-            partial_reg_load     => partial_reg_load,
-            chipher_reg_load     => chipher_reg_load,
-            exponent_reg_load    => exponent_reg_load
-
+			exponent_is_0	     => exponent_is_0	
 	   );
 
 end expBehave;

@@ -37,46 +37,43 @@ entity exponentiation_datapath is
 	);
     Port (
         -- Clock and Reset
-        clk         : in std_logic;
-        reset_n     : in std_logic;
+        clk                 : in std_logic;
+        reset_n             : in std_logic;
         
         --input data
-		message 	: in    std_logic_vector ( C_block_size-1 downto 0 );
-		key 		: in    std_logic_vector ( C_block_size-1 downto 0 );
+		message 	        : in    std_logic_vector ( C_block_size-1 downto 0 );
+		key 		        : in    std_logic_vector ( C_block_size-1 downto 0 );
 		
 		--modulus
-		modulus 	: in    std_logic_vector(C_block_size-1 downto 0);
+		modulus 	        : in    std_logic_vector(C_block_size-1 downto 0);
 		
 		--output data
-		result 		: out   std_logic_vector(C_block_size-1 downto 0);
+		result 		        : out   std_logic_vector(C_block_size-1 downto 0);
 		
 		-- Reg control
-		partial_reg_sel   : in std_logic;
-		chipher_reg_sel   : in std_logic;
-		exponent_reg_sel  : in std_logic;
+		partial_reg_sel     : in std_logic;
+		chipher_reg_sel     : in std_logic;
+		exponent_reg_sel    : in std_logic;
 		
 		-- Reg Load Control
-		partial_reg_load  : in std_logic;
-		chipher_reg_load  : in std_logic;
-		exponent_reg_load : in std_logic;
+		partial_reg_load    : in std_logic;
+		chipher_reg_load    : in std_logic;
+		exponent_reg_load   : in std_logic;
 
         -- MultiMod Data in/out ready for partial block
-        mm_div_partial    : in  std_logic;
-        mm_dir_partial    : out std_logic;
-
-        mm_dov_partial    : out std_logic;
-        mm_dor_partial    : in  std_logic;
-
+        mm_div_partial      : in  std_logic;
+        mm_dir_partial      : out std_logic;
+        mm_dov_partial      : out std_logic;
+        mm_dor_partial      : in  std_logic;
         
         -- MultiMod Data in/out ready for chipher block		
-		mm_div_chipher: in  std_logic;
-        mm_dir_chipher: out std_logic;
-               
-        mm_dov_chipher: out std_logic;
-        mm_dor_chipher: in  std_logic;
+		mm_div_chipher      : in  std_logic;
+        mm_dir_chipher      : out std_logic; 
+        mm_dov_chipher      : out std_logic;
+        mm_dor_chipher      : in  std_logic;
         
-        mm_reset_n:     in  std_logic;
-		
+        -- Seperate MM Reset
+        mm_reset_n          : in  std_logic;
 		
 		-- Exponentiation values
 		exponent_lsb      : out std_logic;
@@ -187,9 +184,7 @@ begin
     end process;
     
     -- Set the LSB of the exponent
-    --process (exponent_reg) begin
     exponent_lsb    <= exponent_reg(0);
-    --end process;
     
     -- Check if there are more bits left in the exponent
     process (exponent_reg) begin

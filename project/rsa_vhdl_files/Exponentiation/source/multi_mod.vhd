@@ -78,9 +78,9 @@ begin
 		    -- Clock and Reset
 	        clk                 => clk,
             reset_n             => reset_n,
-                                
+            
+            -- Seperate MM Reset
             mm_reset_n          => mm_reset_n,
-
             
             -- Data readiness
             mm_data_in_valid    => mm_data_in_valid,
@@ -91,19 +91,17 @@ begin
             -- Register load signals
             A_reg_load          => A_reg_load,
             B_reg_load          => B_reg_load,
-            --N_reg_load          => N_reg_load,
-            
             M_reg_load          => M_reg_load,
             
             -- Source selction for the B register
             B_reg_sel           => B_reg_sel,
             
+            -- Selection of correct calculation result
+            mod_sel             => mod_sel,
+            
             -- Borrow signals
             borrow_1n           => borrow_1n,
-            borrow_2n           => borrow_2n,
-            
-            -- Selection of correct calculation result
-            mod_sel             => mod_sel
+            borrow_2n           => borrow_2n
             
 		);
 
@@ -117,6 +115,7 @@ begin
 	        clk         => clk,
             --reset_n     => reset_n,
             
+            -- Connect the seperate datapath reset
             reset_n  => mm_reset_n,
             
             -- Data in connection
@@ -130,8 +129,6 @@ begin
             -- Register load signals
             A_reg_load  => A_reg_load,
             B_reg_load  => B_reg_load,
-            --N_reg_load  => N_reg_load,
-            
             M_reg_load  => M_reg_load,
 			
 			-- Source selction for the B register
