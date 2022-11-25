@@ -169,7 +169,7 @@ begin
             -- Reg Load Contro    
             partial_reg_load     => partial_reg_load,
             chipher_reg_load     => chipher_reg_load,
-            exponent_reg_load    => exponent_reg_load
+            exponent_reg_load    => exponent_reg_load,
 
 			-- MultiMod Data in/out ready for partial block
 			mm_dir_partial    => mm_dir_partial,
