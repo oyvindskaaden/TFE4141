@@ -76,7 +76,7 @@ architecture Behavioral of multi_mod_control is
     signal cnt_reset_n  : std_logic;
     
     
-    type state is (IDLE, SETUP, RUNNING, DONE);
+    type state is (IDLE, SETUP, RUNNING, WAIT_OUT, DONE);
     signal curr_state, next_state : state;
     
     signal borrow       : std_logic_vector(1 downto 0);
@@ -162,11 +162,29 @@ begin
             
          
             if (cnt_out = std_logic_vector(TO_UNSIGNED(C_block_size, 8))) then
-                next_state      <= DONE;
+                next_state      <= WAIT_OUT;
             else
                 next_state      <= RUNNING;
             end if;
             
+        when WAIT_OUT =>
+            mm_reset_n          <= '1';
+            
+            cnt_en              <= '0';
+            cnt_reset_n         <= '0';
+            
+            A_reg_load          <= '0';
+            --N_reg_load          <= '0';
+            B_reg_load          <= '0';
+            M_reg_load          <= '0';
+            
+            B_reg_sel           <= '1';
+            
+            mm_data_in_ready <= '0';
+
+            mm_data_out_valid   <= '0';
+            
+            next_state      <= DONE;
             
         when DONE =>
             mm_reset_n          <= '1';
